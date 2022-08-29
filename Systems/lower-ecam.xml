@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
-##############################################
-# Copyright (c) Joshua Davidson (it0uchpods) #
-##############################################
--->
+<!-- Copyright (c) 2019 Joshua Davidson (Octal450) -->
 
 <PropertyList>
 	
@@ -118,10 +114,10 @@
 		<input>
 			<expression>
 				<table>
-					<property>/controls/flight/aileron-left</property>
-					<entry><ind>-0.5</ind><dep>-0.73</dep></entry>
-					<entry><ind> 0.0</ind><dep> 0.00</dep></entry>
-					<entry><ind> 0.5</ind><dep> 0.83</dep></entry>
+					<property>/fdm/jsbsim/hydraulics/aileron-l/final-deg</property>
+					<entry><ind>-25</ind><dep>-0.83</dep></entry>
+					<entry><ind>  0</ind><dep> 0.00</dep></entry>
+					<entry><ind> 25</ind><dep> 0.73</dep></entry>
 				</table>
 			</expression>
 		</input>
@@ -135,10 +131,10 @@
 		<input>
 			<expression>
 				<table>
-					<property>/controls/flight/aileron-right</property>
-					<entry><ind>-0.5</ind><dep>-0.83</dep></entry>
-					<entry><ind> 0.0</ind><dep> 0.00</dep></entry>
-					<entry><ind> 0.5</ind><dep> 0.73</dep></entry>
+					<property>/fdm/jsbsim/hydraulics/aileron-r/final-deg</property>
+					<entry><ind>-25</ind><dep> 0.73</dep></entry>
+					<entry><ind>  0</ind><dep> 0.00</dep></entry>
+					<entry><ind> 25</ind><dep>-0.83</dep></entry>
 				</table>
 			</expression>
 		</input>
@@ -152,10 +148,10 @@
 		<input>
 			<expression>
 				<table>
-					<property>/controls/flight/elevator-left</property>
-					<entry><ind>-0.5</ind><dep>-1.03</dep></entry>
-					<entry><ind> 0.0</ind><dep> 0.00</dep></entry>
-					<entry><ind> 0.5</ind><dep> 0.63</dep></entry>
+					<property>/fdm/jsbsim/hydraulics/elevator-l/final-deg</property>
+					<entry><ind>-30</ind><dep>-1.03</dep></entry>
+					<entry><ind>  0</ind><dep> 0.00</dep></entry>
+					<entry><ind> 17</ind><dep> 0.63</dep></entry>
 				</table>
 			</expression>
 		</input>
@@ -169,10 +165,10 @@
 		<input>
 			<expression>
 				<table>
-					<property>/controls/flight/elevator-right</property>
-					<entry><ind>-0.5</ind><dep>-1.03</dep></entry>
-					<entry><ind> 0.0</ind><dep> 0.00</dep></entry>
-					<entry><ind> 0.5</ind><dep> 0.63</dep></entry>
+					<property>/fdm/jsbsim/hydraulics/elevator-r/final-deg</property>
+					<entry><ind>-30</ind><dep>-1.03</dep></entry>
+					<entry><ind>  0</ind><dep> 0.00</dep></entry>
+					<entry><ind> 17</ind><dep> 0.63</dep></entry>
 				</table>
 			</expression>
 		</input>
@@ -183,7 +179,7 @@
 		<name>Elevator Trim Deg</name>
 		<type>gain</type>
 		<gain>-1.0</gain>
-		<input>/fdm/jsbsim/fcs/pitch-trim-pos-deg</input>
+		<input>/fdm/jsbsim/hydraulics/elevator-trim/final-deg</input>
 		<output>/ECAM/Lower/elevator-trim-deg</output>
 	</filter>
 

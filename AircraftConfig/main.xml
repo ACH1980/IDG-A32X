@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<!--
-##############################################
-# Copyright (c) Joshua Davidson (it0uchpods) #
-##############################################
--->
+<!-- Copyright (c) 2019 Joshua Davidson (Octal450) -->
 
 <!-- A3XX Aircraft Config Dialog -->
 
@@ -17,7 +13,7 @@
 		<layout>hbox</layout>
 		<text>
 			<halign>left</halign>
-			<label>Aircraft Configuration V1.5.0</label>
+			<label>Aircraft Configuration V1.5.1</label>
 		</text>
 		<empty><stretch>1</stretch></empty>
 		<button>
@@ -227,39 +223,51 @@
 			<checkbox>
 				<label>Nose Gear Chock</label>
 				<halign>left</halign>
+				<enable>
+					<and>
+						<property>/gear/gear[0]/wow</property>
+						<property>/gear/gear[1]/wow</property>
+						<property>/gear/gear[2]/wow</property>
+					</and>
+				</enable>
 				<property>/services/chokes/nose</property>
 				<binding>
 					<command>dialog-apply</command>
 				</binding>
-				<enable> <!-- Doesn't really do anything yet -->
-					<property>/systems/acconfig/unused/unused</property>
-				</enable>
 				<live>true</live>
 			</checkbox>
 			
 			<checkbox>
 				<label>Main Left Gear Chock</label>
 				<halign>left</halign>
+				<enable>
+					<and>
+						<property>/gear/gear[0]/wow</property>
+						<property>/gear/gear[1]/wow</property>
+						<property>/gear/gear[2]/wow</property>
+					</and>
+				</enable>
 				<property>/services/chokes/left</property>
 				<binding>
 					<command>dialog-apply</command>
 				</binding>
-				<enable> <!-- Doesn't really do anything yet -->
-					<property>/systems/acconfig/unused/unused</property>
-				</enable>
 				<live>true</live>
 			</checkbox>
 			
 			<checkbox>
 				<label>Main Right Gear Chock</label>
 				<halign>left</halign>
+				<enable>
+					<and>
+						<property>/gear/gear[0]/wow</property>
+						<property>/gear/gear[1]/wow</property>
+						<property>/gear/gear[2]/wow</property>
+					</and>
+				</enable>
 				<property>/services/chokes/right</property>
 				<binding>
 					<command>dialog-apply</command>
 				</binding>
-				<enable> <!-- Doesn't really do anything yet -->
-					<property>/systems/acconfig/unused/unused</property>
-				</enable>
 				<live>true</live>
 			</checkbox>
 			

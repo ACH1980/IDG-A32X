@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<!--
-##############################################
-# Copyright (c) Joshua Davidson (it0uchpods) #
-##############################################
--->
+<!-- Copyright (c) 2019 Joshua Davidson (Octal450) -->
 
 <PropertyList>
 
@@ -29,10 +25,16 @@
 		<object-name>Cone</object-name>
 		<condition>
 			<and>
-				<greater-than-equals>
-					<property>systems/electrical/bus/ac-ess</property>
-					<value>110</value>
-				</greater-than-equals>
+				<or>
+					<greater-than-equals>
+						<property>systems/electrical/bus/ac1</property>
+						<value>110</value>
+					</greater-than-equals>
+					<greater-than-equals>
+						<property>systems/electrical/bus/ac2</property>
+						<value>110</value>
+					</greater-than-equals>
+				</or>
 				<greater-than-equals>
 					<property>/sim/model/lights/nose-lights</property>
 					<value>0.5</value>

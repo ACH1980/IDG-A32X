@@ -1,10 +1,8 @@
 # A3XX ND Canvas
-# Joshua Davidson (it0uchpods)
+# Joshua Davidson (Octal450)
 # Based on work by artix
 
-##############################################
-# Copyright (c) Joshua Davidson (it0uchpods) #
-##############################################
+# Copyright (c) 2019 Joshua Davidson (Octal450)
 
 canvas.RouteDriver = {
     new: func(){

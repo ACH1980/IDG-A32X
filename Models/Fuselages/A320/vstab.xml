@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<!--
-##############################################
-# Copyright (c) Joshua Davidson (it0uchpods) #
-##############################################
--->
+<!-- Copyright (c) 2019 Joshua Davidson (Octal450) -->
 
 <PropertyList>
 
@@ -22,7 +18,7 @@
 		<type>rotate</type>
 		<object-name>Rudder</object-name>
 		<property>sim/multiplay/generic/float[8]</property>
-		<factor>25</factor>
+		<factor>1</factor>
 		<axis>
 			<x1-m>4.013</x1-m>
 			<y1-m>0</y1-m>

@@ -1,9 +1,7 @@
 # Airbus A3XX FBW/Flight Control Computer System
-# Joshua Davidson (it0uchpods)
+# Joshua Davidson (Octal450)
 
-##############################################
-# Copyright (c) Joshua Davidson (it0uchpods) #
-##############################################
+# Copyright (c) 2019 Joshua Davidson (Octal450)
 
 # If All ELACs Fail, Alternate Law
 
@@ -39,31 +37,31 @@ var fctlInit = func {
 var update_loop = func {
 	var elac1_sw = getprop("/controls/fctl/elac1");
 	var elac2_sw = getprop("/controls/fctl/elac2");
-	var sec1_sw  = getprop("/controls/fctl/sec1");
-	var sec2_sw  = getprop("/controls/fctl/sec2");
-	var sec3_sw  = getprop("/controls/fctl/sec3");
-	var fac1_sw  = getprop("/controls/fctl/fac1");
-	var fac2_sw  = getprop("/controls/fctl/fac2");
+	var sec1_sw = getprop("/controls/fctl/sec1");
+	var sec2_sw = getprop("/controls/fctl/sec2");
+	var sec3_sw = getprop("/controls/fctl/sec3");
+	var fac1_sw = getprop("/controls/fctl/fac1");
+	var fac2_sw = getprop("/controls/fctl/fac2");
 	
-	var elac1_fail  = getprop("/systems/failures/elac1");
-	var elac2_fail  = getprop("/systems/failures/elac2");
-	var sec1_fail   = getprop("/systems/failures/sec1");
-	var sec2_fail   = getprop("/systems/failures/sec2");
-	var sec3_fail   = getprop("/systems/failures/sec3");
-	var fac1_fail   = getprop("/systems/failures/fac1");
-	var fac2_fail   = getprop("/systems/failures/fac2");
+	var elac1_fail = getprop("/systems/failures/elac1");
+	var elac2_fail = getprop("/systems/failures/elac2");
+	var sec1_fail = getprop("/systems/failures/sec1");
+	var sec2_fail = getprop("/systems/failures/sec2");
+	var sec3_fail = getprop("/systems/failures/sec3");
+	var fac1_fail = getprop("/systems/failures/fac1");
+	var fac2_fail = getprop("/systems/failures/fac2");
 	
-	var ac_ess      = getprop("/systems/electrical/bus/ac-ess");
-	var dc_ess      = getprop("/systems/electrical/bus/dc-ess");
+	var ac_ess = getprop("/systems/electrical/bus/ac-ess");
+	var dc_ess = getprop("/systems/electrical/bus/dc-ess");
 	var dc_ess_shed = getprop("/systems/electrical/bus/dc-ess-shed");
-	var ac1         = getprop("/systems/electrical/bus/ac1");
-	var ac2         = getprop("/systems/electrical/bus/ac2");
-	var dc1         = getprop("/systems/electrical/bus/dc1");
-	var dc2         = getprop("/systems/electrical/bus/dc2");
+	var ac1 = getprop("/systems/electrical/bus/ac1");
+	var ac2 = getprop("/systems/electrical/bus/ac2");
+	var dc1 = getprop("/systems/electrical/bus/dc1");
+	var dc2 = getprop("/systems/electrical/bus/dc2");
 	var battery1_sw = getprop("/controls/electrical/switches/battery1");
 	var battery2_sw = getprop("/controls/electrical/switches/battery2");
-	var elac1_test  = getprop("/systems/electrical/elac1-test");
-	var elac2_test  = getprop("/systems/electrical/elac2-test");
+	var elac1_test = getprop("/systems/electrical/elac1-test");
+	var elac2_test = getprop("/systems/electrical/elac2-test");
 	
 	if (elac1_sw and !elac1_fail and (dc_ess >= 25 or battery1_sw) and !elac1_test) {
 		setprop("/systems/fctl/elac1", 1);
@@ -207,14 +205,11 @@ var update_loop = func {
 	}
 	
 	if (getprop("/instrumentation/airspeed-indicator/indicated-speed-kt") > getprop("/it-fbw/speeds/vmo-mmo") + 6 and (law == 0 or law == 1)) {
+		if (getprop("/it-autoflight/input/ap1") == 1 or getprop("/it-autoflight/input/ap2") == 1) {
+			libraries.apOff("hard", 0);
+		}
 		if (getprop("/it-fbw/protections/overspeed") != 1) {
 			setprop("/it-fbw/protections/overspeed", 1);
-		}
-		if (getprop("/it-autoflight/output/ap1") == 1) {
-			setprop("/it-autoflight/input/ap1", 0);
-		}
-		if (getprop("/it-autoflight/output/ap2") == 1) {
-			setprop("/it-autoflight/input/ap2", 0);
 		}
 	} else {
 		if (getprop("/it-fbw/protections/overspeed") != 0) {
@@ -277,11 +272,8 @@ var fbw_loop = func {
 	}
 	
 	if (getprop("/it-fbw/law") != 0) {
-		if (getprop("/it-autoflight/output/ap1") == 1) {
-			setprop("/it-autoflight/input/ap1", 0);
-		}
-		if (getprop("/it-autoflight/output/ap2") == 1) {
-			setprop("/it-autoflight/input/ap2", 0);
+		if (getprop("/it-autoflight/output/ap1") == 1 or getprop("/it-autoflight/output/ap2") == 1) {
+			libraries.apOff("hard", 0);
 		}
 	}
 }

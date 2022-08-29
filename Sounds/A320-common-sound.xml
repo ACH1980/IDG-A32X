@@ -1,8 +1,4 @@
-<!--
-##############################################
-# Copyright (c) Joshua Davidson (it0uchpods) #
-##############################################
--->
+<!-- Copyright (c) 2019 Joshua Davidson (Octal450) -->
 
 <PropertyList>
 	<fx>
@@ -817,10 +813,15 @@
 		</retard>
 		
 		<apoff>
-			<name>apoff</name>
-			<path>/Aircraft/IDG-A32X/Sounds/apoff.wav</path>
+			<name>apoff-looped</name>
+			<mode>looped</mode>
+			<path>Aircraft/IDG-A32X/Sounds/apoff.wav</path>
 			<condition>
 				<and>
+					<equals>
+						<property>/it-autoflight/output/ap-warning</property>
+						<value>2</value>
+					</equals>
 					<equals>
 						<property>/it-autoflight/output/ap1</property>
 						<value>0</value>
@@ -833,6 +834,52 @@
 						<property>/it-autoflight/sound/apoffsound</property>
 						<property>/it-autoflight/sound/apoffsound2</property>
 					</or>
+				</and>
+			</condition>
+			<volume>
+				<factor>40.0</factor>
+			</volume>
+		</apoff>
+		
+		<apoff>
+			<name>apoff-single</name>
+			<mode>once</mode>
+			<path>Aircraft/IDG-A32X/Sounds/apoff.wav</path>
+			<condition>
+				<and>
+					<equals>
+						<property>/it-autoflight/output/ap-warning</property>
+						<value>1</value>
+					</equals>
+					<equals>
+						<property>/it-autoflight/output/ap1</property>
+						<value>0</value>
+					</equals>
+					<equals>
+						<property>/it-autoflight/output/ap2</property>
+						<value>0</value>
+					</equals>
+					<or>
+						<property>/it-autoflight/sound/apoffsound</property>
+						<property>/it-autoflight/sound/apoffsound2</property>
+					</or>
+				</and>
+			</condition>
+			<volume>
+				<factor>40.0</factor>
+			</volume>
+		</apoff>
+		
+		<apoff>
+			<name>athroff</name>
+			<path>Aircraft/IDG-A32X/Sounds/Cockpit/chime.wav</path>
+			<condition>
+				<and>
+					<equals>
+						<property>/it-autoflight/output/athr</property>
+						<value>0</value>
+					</equals>
+					<property>/it-autoflight/sound/athrsound</property>
 				</and>
 			</condition>
 			<volume>
@@ -868,28 +915,6 @@
 			<volume>
 				<property>sim/sounde/gear-vol</property>
 			</volume>
-		</gear>
-		
-		<gear>
-			<name>gearding</name>
-			<mode>once</mode>
-			<path>nosmoko.wav</path> <!-- since it is trigered by smoking sign logic then the sound must be smoking sign sound -->
-			<condition>
-				<and>
-					<equals>
-						<property>gear/gear[0]/position-norm</property>
-						<value>0</value>
-					</equals>
-					<equals>
-						<property>gear/gear[1]/position-norm</property>
-						<value>0</value>
-					</equals>
-					<equals>
-						<property>gear/gear[2]/position-norm</property>
-						<value>0</value>
-					</equals>
-				</and>
-			</condition>
 		</gear>
 		
 		<wind>
@@ -1468,6 +1493,57 @@
 				<factor>0.60</factor>
 			</volume>
 		</announcements>
+		
+		<chime>
+			<name>Chime</name>
+			<path>Aircraft/IDG-A32X/Sounds/Cockpit/chime.wav</path>
+			<mode>once</mode>
+			<type>avionics</type>
+			<condition>
+				<property>/sim/sound/warnings/chime</property>
+			</condition>
+			<volume>
+				<property>sim/sound/effects/volume</property>
+			</volume>
+			<reference-dist>10</reference-dist>
+			<max-dist>100</max-dist>
+		</chime>
+
+		<crc>
+			<name>CRC</name>
+			<path>Aircraft/IDG-A32X/Sounds/Cockpit/crc.wav</path>
+			<mode>looped</mode>
+			<type>avionics</type>
+			<condition>
+				<property>/ECAM/warnings/master-warning-light</property>
+				<property>/sim/sound/warnings/crc</property>
+			</condition>
+			<volume>
+				<property>sim/sound/effects/volume</property>
+			</volume>
+			<reference-dist>10</reference-dist>
+			<max-dist>100</max-dist>
+		</crc>
+	
+		<stall-voice>
+			<name>stall-voice</name>
+			<mode>looped</mode>
+			<path>/Aircraft/IDG-A32X/Sounds/Cockpit/stall_voice.wav</path>
+			<type>avionics</type>
+			<condition>
+				<property>warnings/stall/active</property>
+			</condition>
+			<volume>
+				<property>sim/sound/effects/volume</property>
+				<factor>3</factor>
+				<!--offset>1</offset-->
+				<min>1</min>
+				<max>6</max>
+			</volume>
+
+			<reference-dist>10</reference-dist>
+			<max-dist>100.0</max-dist>
+		</stall-voice>
 
 	  </fx>
 </PropertyList>

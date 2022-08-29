@@ -1,9 +1,6 @@
 # A3XX FADEC/Throttle Control System
-# Joshua Davidson (it0uchpods)
 
-##############################################
-# Copyright (c) Joshua Davidson (it0uchpods) #
-##############################################
+# Copyright (c) 2019 Joshua Davidson (Octal450)
 
 if (getprop("/options/eng") == "IAE") {
 	io.include("fadec-iae.nas");
@@ -11,6 +8,25 @@ if (getprop("/options/eng") == "IAE") {
 	io.include("fadec-cfm.nas");
 }
 
+var thr1 = 0;
+var thr2 = 0;
+var state1 = 0;
+var state2 = 0;
+var engstate1 = 0;
+var engstate2 = 0;
+var eprtoga = 0;
+var eprmct = 0;
+var eprflx = 0;
+var eprclb = 0;
+var n1toga = 0;
+var n1mct = 0;
+var n1flx = 0;
+var n1clb = 0;
+var alpha = 0;
+var flaps = 0;
+var alphaProt = 0;
+var togaLock = 0;
+var gs = 0;
 setprop("/systems/thrust/alpha-floor", 0);
 setprop("/systems/thrust/toga-lk", 0);
 setprop("/systems/thrust/epr/toga-lim", 0.0);
@@ -35,27 +51,11 @@ setprop("/systems/thrust/clb-lim", 0.0);
 setprop("/systems/thrust/lim-flex", 0);
 setprop("/engines/flex-derate", 0);
 setprop("/systems/thrust/eng-out", 0);
+setprop("/systems/thrust/thr-locked", 0);
+setprop("/systems/thrust/thr-lock-cmd[0]", 0);
+setprop("/systems/thrust/thr-lock-cmd[1]", 0);
 
 setlistener("/sim/signals/fdm-initialized", func {
-	var thr1 = getprop("/controls/engines/engine[0]/throttle-pos");
-	var thr2 = getprop("/controls/engines/engine[1]/throttle-pos");
-	var state1 = getprop("/systems/thrust/state1");
-	var state2 = getprop("/systems/thrust/state2");
-	var engstate1 = getprop("/engines/engine[0]/state");
-	var engstate2 = getprop("/engines/engine[1]/state");
-	var eprtoga = getprop("/systems/thrust/epr/toga-lim");
-	var eprmct = getprop("/systems/thrust/epr/mct-lim");
-	var eprflx = getprop("/systems/thrust/epr/flx-lim");
-	var eprclb = getprop("/systems/thrust/epr/clb-lim");
-	var n1toga = getprop("/systems/thrust/n1/toga-lim");
-	var n1mct = getprop("/systems/thrust/n1/mct-lim");
-	var n1flx = getprop("/systems/thrust/n1/flx-lim");
-	var n1clb = getprop("/systems/thrust/n1/clb-lim");
-	var alpha = getprop("/fdm/jsbsim/aero/alpha-deg");
-	var flaps = getprop("/controls/flight/flap-pos");
-	var alphaProt = 0;
-	var togaLock = 0;
-	var gs = getprop("/velocities/groundspeed-kt");
 	thrust_loop.start();
 	thrust_flash.start();
 });
@@ -119,7 +119,7 @@ setlistener("/controls/engines/engine[0]/throttle-pos", func {
 		}
 		setprop("/controls/engines/engine[0]/throttle-fdm", 0.99);
 	}
-});
+}, 0, 0);
 
 setlistener("/controls/engines/engine[1]/throttle-pos", func {
 	engstate1 = getprop("/engines/engine[0]/state");
@@ -180,7 +180,7 @@ setlistener("/controls/engines/engine[1]/throttle-pos", func {
 		}
 		setprop("/controls/engines/engine[1]/throttle-fdm", 0.99);
 	}
-});
+}, 0, 0);
 
 # Alpha Floor and Toga Lock
 setlistener("/it-autoflight/input/athr", func {
@@ -196,7 +196,11 @@ var atoff_request = func {
 	state1 = getprop("/systems/thrust/state1");
 	state2 = getprop("/systems/thrust/state2");
 	if ((state1 == "IDLE") and (state2 == "IDLE") and (getprop("/systems/thrust/alpha-floor") == 0) and (getprop("/systems/thrust/toga-lk") == 0)) {
-		setprop("/it-autoflight/input/athr", 0);
+		if (getprop("/it-autoflight/input/athr") == 1 and getprop("/position/gear-agl-ft") > 50) {
+			libraries.athrOff("soft");
+		} elsif (getprop("/position/gear-agl-ft") < 50) {
+			libraries.athrOff("none");
+		}
 	}
 }
 
@@ -218,7 +222,7 @@ var thrust_loop = maketimer(0.04, func {
 	gs = getprop("/velocities/groundspeed-kt");
 	if (getprop("/FMGC/internal/flex-set") == 1 and getprop("/systems/fadec/n1mode1") == 0 and getprop("/systems/fadec/n1mode2") == 0 and getprop("/gear/gear[1]/wow") == 1 and getprop("/gear/gear[2]/wow") == 1 and gs < 40) {
 		setprop("/systems/thrust/lim-flex", 1);
-	} else if (getprop("/FMGC/internal/flex-set") == 0 and engstate1 != 3 and engstate2 != 3) {
+	} else if (getprop("/FMGC/internal/flex-set") == 0 or engstate1 != 3 or engstate2 != 3) {
 		setprop("/systems/thrust/lim-flex", 0);
 	}
 	if (getprop("/controls/engines/engine[0]/reverser") == "1" or getprop("/controls/engines/engine[1]/reverser") == "1") {
@@ -277,10 +281,14 @@ var thrust_loop = maketimer(0.04, func {
 			setprop("/systems/thrust/alpha-floor", 1);
 			setprop("/systems/thrust/toga-lk", 0);
 			setprop("/it-autoflight/input/athr", 1);
+			setprop("/controls/engines/engine[0]/throttle-fdm", 0.99);
+			setprop("/controls/engines/engine[1]/throttle-fdm", 0.99);
 		} else if (getprop("/systems/thrust/alpha-floor") == 1 and alpha < togaLock) {
 			setprop("/systems/thrust/alpha-floor", 0);
 			setprop("/it-autoflight/input/athr", 1);
 			setprop("/systems/thrust/toga-lk", 1);
+			setprop("/controls/engines/engine[0]/throttle-fdm", 0.99);
+			setprop("/controls/engines/engine[1]/throttle-fdm", 0.99);
 		}
 	} else {
 		setprop("/systems/thrust/alpha-floor", 0);
@@ -331,3 +339,10 @@ var thrust_flash = maketimer(0.5, func {
 		}
 	}
 });
+
+setlistener("/systems/thrust/thr-locked", func {
+	if (getprop("/systems/thrust/thr-locked") == 1) {
+		setprop("/systems/thrust/thr-lock-cmd[0]", getprop("/controls/engines/engine[0]/throttle-output"));
+		setprop("/systems/thrust/thr-lock-cmd[1]", getprop("/controls/engines/engine[1]/throttle-output"));
+	}
+}, 0, 0);

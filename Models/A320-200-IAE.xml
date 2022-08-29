@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<!--
-##############################################
-# Copyright (c) Joshua Davidson (it0uchpods) #
-##############################################
--->
+<!-- Copyright (c) 2019 Joshua Davidson (Octal450) -->
 
 <PropertyList>
 	<name>A320-200</name>
@@ -344,23 +340,14 @@
 	<!-- Other non-aircraft models -->
 	<model>
 		<name>Pushback</name>
-		<path>Models/Goldhofert-autopush.xml</path>
+		<path>Aircraft/IDG-A32X/Models/Services/Pushback/Douglas.xml</path>
 		<offsets>
-			<x-m>5.55</x-m>
+			<x-m>6.0</x-m>
 			<y-m>0</y-m>
-			<z-m>-4.14</z-m>
-<!--			<x-m>7.55</x-m>
-			<y-m>0</y-m>
-			<z-m>-4.14</z-m> -->
-
+			<z-m>-4.24</z-m>
 		</offsets>
 	</model>
-        <model>
-                <path>Aircraft/Generic/marker.xml</path>
-        </model>
-
-
-
+	
 	<!-- LIVERY SELECT -->
 	<!-- Animation -->
 	<animation>
@@ -384,14 +371,13 @@
 	<!-- Nasal code -->
 	<nasal>
 		<load>
-		 var livery_update = aircraft.livery_update.new("Aircraft/IDG-A32X/Models/Liveries/A320/IAE");
+			var livery_update = aircraft.livery_update.new("Aircraft/IDG-A32X/Models/Liveries/A320/IAE");
 		</load>
 		<unload>
-		 livery_update.stop();
+			livery_update.stop();
 		</unload>
 	</nasal>
-    
-    
+	
 	<!-- Ground Services -->    
 	<model>
 		<name>ground_services</name>

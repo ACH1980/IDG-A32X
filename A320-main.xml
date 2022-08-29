@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<!--
-##############################################
-# Copyright (c) Joshua Davidson (it0uchpods) #
-##############################################
--->
+<!-- Copyright (c) 2019 Joshua Davidson (Octal450) -->
 
-<PropertyList include="Aircraft/Generic/Human/Include/walker-include.xml">
+<PropertyList>
 
 	<sim>
 
-		<author>it0uchpods Design Group: Joshua Davidson (it0uchpods), Jonathan Redpath (legoboyvdlp), Thorsten Herrmann (TH-555)</author>
+		<author>Immersive Design Group: Joshua Davidson (Octal450), Jonathan Redpath (legoboyvdlp), Thorsten Herrmann (TH-555)</author>
 		
 		<status>Pre V1.0</status>
 		
@@ -27,12 +23,34 @@
 		</hud>
 
 		<model>
-			<pushback>
-				<kp type="double">5000</kp>
-				<ki type="double">200</ki>
-				<kd type="double">500</kd>
+			<autopush>
+				<connected type="bool">0</connected>
 				<position-norm type="double">0</position-norm>
-			</pushback>
+				<enabled type="int"/>
+				<available type="int">1</available>
+				<chocks alias="/services/chokes/nose"/>
+				<steer-cmd-norm alias="/fdm/jsbsim/hydraulics/tiller/autopush-cmd"/>
+				<yaw alias="/fdm/jsbsim/fcs/steer-deg"/>
+				<yaw-mult type="float">1.0</yaw-mult>
+				<target-speed-km_h type="float">0.0</target-speed-km_h>
+				<K_p type="float">0.5</K_p>
+				<F_p type="float">0.15</F_p>
+				<K_i type="float">0.25</K_i>
+				<F_i type="float">0.1</F_i>
+				<K_d type="float">0.0</K_d>
+				<F_d type="float">0.0</F_d>
+				<pitch-deg type="float">0.0</pitch-deg>
+				<min-turn-radius-m type="float">15</min-turn-radius-m>
+				<stopping-distance-m type="float">5.0</stopping-distance-m>
+				<driver>
+					<F_V type="float">5.5</F_V>
+					<K_psi type="float">0.03</K_psi>
+				</driver>
+				<route>
+					<show type="bool"/>
+				</route>
+				<debug type="bool">false</debug>
+			</autopush>
 			<icing>
 				<iceable>
 					<name>Wing</name>
@@ -60,7 +78,7 @@
 					<ice-inches>0.0</ice-inches>
 					<salvage-control>/controls/deice/windowprobeheat</salvage-control>
 					<sensitivity type="double">0.5</sensitivity>
-				<!-- not relevant for fdm, ignore output-property -->
+					<!-- not relevant for fdm, ignore output-property -->
 				</iceable>
 				<iceable>
 					<name>Fuselage</name>
@@ -94,8 +112,6 @@
 			<tag>retractable-gear</tag>
 			<tag>glass-cockpit</tag>
 			<tag>pressurised</tag>
-			<tag>rembrandt</tag>
-			<!--tag>dual-controls</tag--> <!-- Coming Soon ;) -->
 			<tag>jet</tag>
 			<tag>2-engine</tag>
 		</tags>
@@ -114,39 +130,33 @@
 			</electrical>
 			<!-- 0 is FADEC -->
 			<autopilot n="1">
-				<path>Aircraft/IDG-A32X/Systems/hydraulics.xml</path>
-			</autopilot>
-			<autopilot n="2">
 				<path>Aircraft/IDG-A32X/Systems/fbw-pitch.xml</path>
 			</autopilot>
-			<autopilot n="3">
+			<autopilot n="2">
 				<path>Aircraft/IDG-A32X/Systems/fmgc-drivers.xml</path>
 			</autopilot>
-			<autopilot n="4">
+			<autopilot n="3">
 				<path>Aircraft/IDG-A32X/Systems/fmgc-roll-yaw.xml</path>
 			</autopilot>
-			<autopilot n="5">
+			<autopilot n="4">
 				<path>Aircraft/IDG-A32X/Systems/fmgc-pitch.xml</path>
 			</autopilot>
-			<autopilot n="6">
+			<autopilot n="5">
 				<path>Aircraft/IDG-A32X/Systems/fmgc-thrust.xml</path>
 			</autopilot>
-			<autopilot n="7">
+			<autopilot n="6">
 				<path>Aircraft/IDG-A32X/Systems/libraries.xml</path>
 			</autopilot>
-			<autopilot n="8">
+			<autopilot n="7">
 				<path>Aircraft/IDG-A32X/Systems/upper-ecam.xml</path>
 			</autopilot>
-			<autopilot n="9">
+			<autopilot n="8">
 				<path>Aircraft/IDG-A32X/Systems/lower-ecam.xml</path>
 			</autopilot>
-			<!-- 10 is sound -->
-			<autopilot n="11">
+			<autopilot n="9">
 				<path>Aircraft/IDG-A32X/Systems/pfd.xml</path>
 			</autopilot>
-			<autopilot n="12">
-				<path>Aircraft/IDG-A32X/Systems/zoom-views.xml</path>
-			</autopilot>
+			<!-- 10 is sound -->
 		</systems>
 
 		<sounde>
@@ -171,8 +181,11 @@
 		<menubar>
 			<default>
 				<menu n="100">
-					<label>IDG-A32X</label>
-					<enabled type="bool">true</enabled>
+					<label>|</label>
+					<enabled type="bool">false</enabled>
+				</menu>
+				<menu n="101">
+					<label>System</label>
 					<item>
 						<label>Aircraft Config</label>
 						<binding>
@@ -192,9 +205,109 @@
 						</binding>
 					</item>
 				</menu>
-				<menu n="101">
+				<menu n="102">
+					<label>FMGC</label>
+					<item>
+						<label>FCU Autoflight</label>
+						<binding>
+							<command>dialog-show</command>
+							<dialog-name>autopilot</dialog-name>
+						</binding>
+					</item>
+					<item>
+						<label>Route Manager</label>
+						<binding>
+							<command>dialog-show</command>
+							<dialog-name>route-manager</dialog-name>
+						</binding>
+					</item>
+				</menu>
+				<menu n="103">
+					<label>DU</label>
+					<item>
+						<label>Captain's PFD</label>
+						<binding>
+							<command>nasal</command>
+							<script>
+							canvas_pfd.showPFD1();
+							</script>
+						</binding>
+					</item>
+					<item>
+						<label>First Officer's PFD</label>
+						<binding>
+							<command>nasal</command>
+							<script>
+							canvas_pfd.showPFD2();
+							</script>
+						</binding>
+					</item>
+					<item>
+						<label>Captain's ND</label>
+						<binding>
+							<command>nasal</command>
+							<script>
+							canvas_nd.showNd();
+							</script>
+						</binding>
+					</item>
+					<item>
+						<label>First Officer's ND</label>
+						<binding>
+							<command>nasal</command>
+							<script>
+							canvas_nd.showNd('right');
+							</script>
+						</binding>
+					</item>
+					<item>
+						<label>Upper ECAM</label>
+						<binding>
+							<command>nasal</command>
+							<script>
+							canvas_ecam.showUpperECAM();
+							</script>
+						</binding>
+					</item>
+					<item>
+						<label>Lower ECAM</label>
+						<binding>
+							<command>nasal</command>
+							<script>
+							canvas_ecam.showLowerECAM();
+							</script>
+						</binding>
+					</item>
+					<item>
+						<label>IESI</label>
+						<binding>
+							<command>nasal</command>
+							<script>
+							canvas_iesi.showIESI();
+							</script>
+						</binding>
+					</item>
+					<item>
+						<label>Left MCDU</label>
+						<binding>
+							<command>nasal</command>
+							<script>
+							canvas_mcdu.showMCDU1();
+							</script>
+						</binding>
+					</item>
+					<item>
+						<label>Right MCDU</label>
+						<binding>
+							<command>nasal</command>
+							<script>
+							canvas_mcdu.showMCDU2();
+							</script>
+						</binding>
+					</item>
+				</menu>
+				<menu n="104">
 					<label>Utilities</label>
-					<enabled type="bool">true</enabled>
 					<item>
 						<label>Select Livery</label>
 						<binding>
@@ -227,7 +340,7 @@
 						<label>Pushback</label>
 						<binding>
 							<command>dialog-show</command>
-							<dialog-name>pushback</dialog-name>
+							<dialog-name>autopush</dialog-name>
 						</binding>
 					</item>
 					<item>
@@ -247,118 +360,51 @@
 							<value>1</value>
 						</binding>
 					</item>
-					<item>
-						<label>Show Captain's PFD</label>
-						<binding>
-							<command>nasal</command>
-							<script>
-							canvas_pfd.showPFD1();
-							</script>
-						</binding>
-					</item>
-					<item>
-						<label>Show First Officer's PFD</label>
-						<binding>
-							<command>nasal</command>
-							<script>
-							canvas_pfd.showPFD2();
-							</script>
-						</binding>
-					</item>
-					<item>
-						<label>Show Captain's ND</label>
-						<binding>
-							<command>nasal</command>
-							<script>
-							canvas_nd.showNd();
-							</script>
-						</binding>
-					</item>
-					<item>
-						<label>Show First Officer's ND</label>
-						<binding>
-							<command>nasal</command>
-							<script>
-							canvas_nd.showNd('right');
-							</script>
-						</binding>
-					</item>
-					<item>
-						<label>Show Upper ECAM</label>
-						<binding>
-							<command>nasal</command>
-							<script>
-							canvas_ecam.showUpperECAM();
-							</script>
-						</binding>
-					</item>
-					<item>
-						<label>Show Lower ECAM</label>
-						<binding>
-							<command>nasal</command>
-							<script>
-							canvas_ecam.showLowerECAM();
-							</script>
-						</binding>
-					</item>
-					<item>
-						<label>Show IESI</label>
-						<binding>
-							<command>nasal</command>
-							<script>
-							canvas_iesi.showIESI();
-							</script>
-						</binding>
-					</item>
 				</menu>
 			</default>
 		</menubar>
-
+		
 		<!-- Multiplayer properties -->
 		<multiplay>
 			<generic>
-				<float n="0" alias="/controls/lighting/dome-norm" />
-				<float n="1" alias="/gear/gear[0]/steering-norm" />
-				<float n="2" alias="/engines/engine[0]/reverser-pos-norm" />
-				<float n="3" alias="/engines/engine[1]/reverser-pos-norm" />
-				<float n="4" alias="/controls/flight/elevator-left" />
-				<float n="5" alias="/controls/flight/elevator-right" />
-				<float n="6" alias="/controls/flight/aileron-left" />
-				<float n="7" alias="/controls/flight/aileron-right" />
-				<float n="8" alias="/controls/flight/rudder-fdm" />
-				<float n="9" alias="/fdm/jsbsim/fcs/pitch-trim-pos-deg" />
-				<float n="11" alias="/fdm/jsbsim/fcs/slat-pos-norm" />
-				<int n="2" alias="/controls/lighting/landing-lights[0]" />
-				<int n="3" alias="/controls/lighting/landing-lights[1]" />
-				<int n="4" alias="/controls/lighting/landing-lights[2]" />
-				<int n="5" alias="/sim/model/lights/nav-lights" />
-				<int n="6" alias="/sim/model/lights/logo-lights" />
-				<int n="7" alias="/sim/model/lights/strobe/state" />
-				<int n="8" alias="/controls/lighting/wing-lights" />
-				<int n="9" alias="/sim/model/lights/beacon/state" />
-				<int n="10" alias="/engines/engine[0]/contrail" />
-				<int n="11" alias="/engines/engine[1]/contrail" />
-				<int n="12" alias="/sharklet" />
+				<float n="0" alias="/controls/lighting/dome-norm"/>
+				<float n="1" alias="/gear/gear[0]/steering-norm"/>
+				<float n="2" alias="/engines/engine[0]/reverser-pos-norm"/>
+				<float n="3" alias="/engines/engine[1]/reverser-pos-norm"/>
+				<float n="4" alias="/fdm/jsbsim/hydraulics/elevator-l/final-deg"/>
+				<float n="5" alias="/fdm/jsbsim/hydraulics/elevator-r/final-deg"/>
+				<float n="6" alias="/fdm/jsbsim/hydraulics/aileron-l/final-deg"/>
+				<float n="7" alias="/fdm/jsbsim/hydraulics/aileron-r/final-deg"/>
+				<float n="8" alias="/fdm/jsbsim/hydraulics/rudder/final-deg"/>
+				<float n="9" alias="/fdm/jsbsim/hydraulics/elevator-trim/final-deg"/>
+				<float n="11" alias="/fdm/jsbsim/fcs/slat-pos-norm"/>
+				<int n="2" alias="/controls/lighting/landing-lights[0]"/>
+				<int n="3" alias="/controls/lighting/landing-lights[1]"/>
+				<int n="4" alias="/controls/lighting/landing-lights[2]"/>
+				<int n="5" alias="/sim/model/lights/nav-lights"/>
+				<int n="6" alias="/sim/model/lights/logo-lights"/>
+				<int n="7" alias="/sim/model/lights/strobe/state"/>
+				<int n="8" alias="/controls/lighting/wing-lights"/>
+				<int n="9" alias="/sim/model/lights/beacon/state"/>
+				<int n="10" alias="/engines/engine[0]/contrail"/>
+				<int n="11" alias="/engines/engine[1]/contrail"/>
+				<int n="12" alias="/sharklet"/>
 			</generic>
 		</multiplay>
 		
 		<flight-recorder include="Systems/flight-recorder.xml"/>
 		
-		<gui n="0" include="Systems/it-gui.xml"/>
+		<gui n="0" include="gui/it-gui.xml"/>
 		
 		<current-view>
-			<z-offset-dec-step type="double">0.0</z-offset-dec-step>
-			<z-offset-inc-step type="double">0.0</z-offset-inc-step>
-			<can-change-z-offset type="bool">false</can-change-z-offset>
-			
-			<z-offset-default type="float">100.0</z-offset-default>
+			<z-offset-default type="float">80.0</z-offset-default>
 			<z-offset-min-m type="float">30.0</z-offset-min-m>
 			<z-offset-max-m type="float">300.0</z-offset-max-m>
 		</current-view>
 		
 		 <minimum-fg-version>2018.1.0</minimum-fg-version>
 	</sim>
-
+	
 	<consumables>
 		<fuel>
 			<tank n="0">
@@ -379,30 +425,60 @@
 		</fuel>
 	</consumables>
 	
+	<fdm>
+		<jsbsim>
+			<external_reactions>
+				<tractor>
+					<magnitude alias="/sim/model/autopush/force-lbf"/>
+					<x alias="/sim/model/autopush/force-x"/>
+					<y alias="/sim/model/autopush/force-y"/>
+				</tractor>
+			</external_reactions>
+		</jsbsim>
+	</fdm>
+	
 	<payload>
 		<weight n="0">
 			<name>Cockpit Crew</name>
-			<weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[0]" />
+			<weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[0]"/>
 			<min-lb type="double">200</min-lb>
 			<max-lb type="double">440</max-lb>
 		</weight>
 		<weight n="1">
-			<name>Passengers</name>
-			<weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[1]" />
-			<min-lb type="double">1500</min-lb>
-			<max-lb type="double">27000</max-lb>
+			<name>Forward Cabin</name>
+			<weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[1]"/>
+			<min-lb type="double">0</min-lb>
+			<max-lb type="double">4649</max-lb>
 		</weight>
 		<weight n="2">
-			<name>Forward Cargo</name>
-			<weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[2]" />
-			<min-lb type="double">300</min-lb>
-			<max-lb type="double">8765</max-lb>
+			<name>Center Cabin</name>
+			<weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[2]"/>
+			<min-lb type="double">0</min-lb>
+			<max-lb type="double">13949</max-lb>
 		</weight>
 		<weight n="3">
+			<name>Aft Cabin</name>
+			<weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[3]"/>
+			<min-lb type="double">0</min-lb>
+			<max-lb type="double">10462</max-lb>
+		</weight>
+		<weight n="4">
+			<name>Forward Cargo</name>
+			<weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[4]"/>
+			<min-lb type="double">0</min-lb>
+			<max-lb type="double">5000</max-lb>
+		</weight>
+		<weight n="5">
 			<name>Aft Cargo</name>
-			<weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[3]" />
-			<min-lb type="double">300</min-lb>
-			<max-lb type="double">8765</max-lb>
+			<weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[5]"/>
+			<min-lb type="double">0</min-lb>
+			<max-lb type="double">6662</max-lb>
+		</weight>
+		<weight n="6">
+			<name>Aft Bulk Cargo</name>
+			<weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[6]"/>
+			<min-lb type="double">0</min-lb>
+			<max-lb type="double">3285</max-lb>
 		</weight>
 	</payload>
 	
@@ -476,17 +552,17 @@
 			</display>
 			<ir n="0">
 				<align type="bool">false</align>
-				<knob type="int">1</knob>
+				<knob type="int">0</knob>
 				<fault type="bool">false</fault>
 			</ir>
 			<ir n="1">
 				<align type="bool">false</align>
-				<knob type="int">1</knob>
+				<knob type="int">0</knob>
 				<fault type="bool">false</fault>
 			</ir>
 			<ir n="2">
 				<align type="bool">false</align>
-				<knob type="int">1</knob>
+				<knob type="int">0</knob>
 				<fault type="bool">false</fault>
 			</ir>
 			<onbat type="bool">false</onbat>
@@ -540,37 +616,16 @@
 		<flight>
 			<aileron-drives-tiller type="bool">0</aileron-drives-tiller>
 			<aileron-input>0</aileron-input>
-			<aileron-left>0.5</aileron-left>
-			<aileron-right>-0.5</aileron-right>
 			<elevator-input>0</elevator-input>
-			<elevator-left>0.1</elevator-left>
-			<elevator-right>0.1</elevator-right>
-			<elevator-trim-fdm>0.0</elevator-trim-fdm>
 			<flap-pos type="int">0</flap-pos>
-			<ground-spoilers-armed type="bool">0</ground-spoilers-armed>
-			<rudder-trim-fdm>0.0</rudder-trim-fdm>
-			<spoiler-l1>0.0</spoiler-l1>
-			<spoiler-l2>0.0</spoiler-l2>
-			<spoiler-l3>0.0</spoiler-l3>
-			<spoiler-l4>0.0</spoiler-l4>
-			<spoiler-l5>0.0</spoiler-l5>
-			<spoiler-l-sum>0.0</spoiler-l-sum>
-			<spoiler-r1>0.0</spoiler-r1>
-			<spoiler-r2>0.0</spoiler-r2>
-			<spoiler-r3>0.0</spoiler-r3>
-			<spoiler-r4>0.0</spoiler-r4>
-			<spoiler-r5>0.0</spoiler-r5>
-			<spoiler-r-sum>0.0</spoiler-r-sum>
-			<speedbrake-output>0.0</speedbrake-output>
 			<speedbrake-arm>0</speedbrake-arm>
-			<speedbrake-lever type="double">0</speedbrake-lever>
-			<speedbrake-norm>0</speedbrake-norm>
 			<slats>0</slats>
 		</flight>
 		<gear>
 			<brake-parking type="bool">0</brake-parking>
 			<tiller-cmd-norm type="double">0</tiller-cmd-norm>
 			<tiller-enabled type="bool">0</tiller-enabled>
+			<nws-switch type="double">1</nws-switch>
 		</gear>
 		<lighting>
 			<DU>
@@ -580,6 +635,8 @@
 				<du4 type="double">1</du4>
 				<du5 type="double">1</du5>
 				<du6 type="double">1</du6>
+				<mcdu1 type="double">1</mcdu1>
+				<mcdu2 type="double">1</mcdu2>
 			</DU>
 			<beacon type="bool">0</beacon>
 			<interior type="double">0</interior>
@@ -591,6 +648,8 @@
 			<landing-lights n="0" type="double">0</landing-lights>
 			<landing-lights n="1" type="double">0</landing-lights>
 			<landing-lights n="2" type="double">0</landing-lights>
+			<ped-flood-knb type="double">0</ped-flood-knb>
+			<ped-flood-norm type="double">0</ped-flood-norm>
 			<main-flood-knb type="double">0</main-flood-knb>
 			<main-flood-norm type="double">0</main-flood-norm>
 			<main-panel-knb type="double">0</main-panel-knb>
@@ -600,11 +659,14 @@
 			<overhead-panel-norm type="double">0</overhead-panel-norm>
 			<main-panel-pedestal-norm type="double">0</main-panel-pedestal-norm>
 			<strobe type="bool">0</strobe>
+			<no-smoking-sign type="bool">1</no-smoking-sign>
+			<seatbelt-sign type="bool">0</seatbelt-sign>
 			<taxi-light-switch type="float">0</taxi-light-switch>
 		</lighting>
 		<OH>
 			<protectors>
 				<ditching type="bool">0</ditching>
+				<elecratman type="bool">0</elecratman>
 				<eng1-manstart type="bool">0</eng1-manstart>
 				<eng2-manstart type="bool">0</eng2-manstart>
 				<eng1-n1 type="bool">0</eng1-n1>
@@ -626,11 +688,16 @@
 		<switches>
 			<cart type="bool">0</cart>
 			<!-- Smoking is bad :P -->
-			<no-smoking-sign type="bool">1</no-smoking-sign>
-			<seatbelt-sign type="bool">0</seatbelt-sign>
+			<no-smoking-sign type="double">0.5</no-smoking-sign>
+			<seatbelt-sign type="double">0.0</seatbelt-sign>
 			<annun-test>0</annun-test>
 			<windowprobeheat type="double">0.5</windowprobeheat>
 			<qnh-knb>100000</qnh-knb>
+			<strobe type="double">0.0</strobe>
+			<beacon type="bool">0</beacon>
+			<wing-lights type="bool">0</wing-lights>
+			<landing-lights-l type="float">0.0</landing-lights-l>
+			<landing-lights-r type="float">0.0</landing-lights-r>
 		</switches>
 		<tray n="0">
 			<lefttrayext type="double">0</lefttrayext>
@@ -688,7 +755,25 @@
 		</gear>
 	</gear>
 	
+	<services n="0">
+		<chokes n="0">
+			<nose type="bool">0</nose>
+			<left type="bool">0</left>
+			<right type="bool">0</right>
+		</chokes>
+	</services>
+	
 	<systems>
+		<acconfig n="0">
+			<autoconfig-running>0</autoconfig-running>
+		</acconfig>
+		<electrical n="0">
+			<bus n="0">
+				<dc-ess>0</dc-ess>
+				<dc1>0</dc1>
+				<dc2>0</dc2>
+			</bus>
+		</electrical>
 		<failures n="0">
 			<aileron-left type="bool">0</aileron-left>
 			<aileron-right type="bool">0</aileron-right>
@@ -742,7 +827,54 @@
 	</options>
 	
 	<instrumentation n="0">
-	
+		<chrono n="0">
+			<started type="bool">0</started>
+			<paused type="bool">0</paused>
+			<text type="string">0' 00'</text>
+			<started-at type="int">0</started-at>
+			<elapsed-time type="int">0</elapsed-time>
+		</chrono>
+
+		<chrono n="1">
+			<started type="bool">0</started>
+			<paused type="bool">0</paused>
+			<text type="string">0' 00'</text>
+			<started-at type="int">0</started-at>
+			<elapsed-time type="int">0</elapsed-time>
+		</chrono>
+		
+		<comm n="0">
+			<frequencies>
+				<selected-mhz type="double">118.7</selected-mhz>
+				<standby-mhz type="double">121.4</standby-mhz>
+			</frequencies>
+			<serviceable type="bool">true</serviceable>
+			<volume type="double">0.6</volume>
+		</comm>
+		
+		<comm n="1">
+			<frequencies>
+				<selected-mhz type="double">119.4</selected-mhz>
+				<standby-mhz type="double">122.6</standby-mhz>
+			</frequencies>
+			<serviceable type="bool">true</serviceable>
+			<volume type="double">0.6</volume>
+		</comm>
+		
+		<comm n="2">
+			<frequencies>
+				<selected-mhz type="double">0</selected-mhz>
+				<standby-mhz type="double">123.2</standby-mhz>
+			</frequencies>
+			<serviceable type="bool">true</serviceable>
+			<volume type="double">0.6</volume>
+		</comm>
+		
+		<ddrmi n="0">
+			<vor-adf-1 type="int">1</vor-adf-1>
+			<vor-adf-2 type="int">1</vor-adf-2>
+		</ddrmi>
+		
 		<dme n="0">
 			<frequencies>
 				<selected-mhz type="double">111.15</selected-mhz>
@@ -779,19 +911,9 @@
 			<volume type="double">0</volume>
 		</dme>
 		
-		<efis n="0">
-			<input n="0">
-				<vor-adf-1 type="int">2</vor-adf-1>
-				<vor-adf-2 type="int">2</vor-adf-2>
-			</input>
-		</efis>
-		
-		<efis n="1">
-			<input n="0">
-				<vor-adf-1 type="int">2</vor-adf-1>
-				<vor-adf-2 type="int">2</vor-adf-2>
-			</input>
-		</efis>
+		<groundradar>
+			<range type="double">1.0</range>
+		</groundradar>
 		
 		<nav n="0">
 			<frequencies>
@@ -862,11 +984,7 @@
 				<volume> 0.8 </volume> <!-- Volume at reference distance -->
 			</speaker>
 		</tcas>
-		<nav-compass>
-			<nav-display n="0" type="int">0</nav-display>
-			<nav-display n="1" type="int">0</nav-display>
-		</nav-compass>
-
+		
 		<!-- See http://wiki.flightgear.org/index.php/GPWS -->
 		<mk-viii n="0">
 			<serviceable type="bool">true</serviceable>
@@ -898,27 +1016,6 @@
 				<file-prefix>Aircraft/IDG-A32X/Sounds/GPWS/</file-prefix>
 			</voice>
 		</mk-viii>
-		
-		<groundradar>
-			<range type="double">1.0</range>
-		</groundradar>
-		
-		<chrono n="0">
-			<started type="bool">0</started>
-			<paused type="bool">0</paused>
-			<text type="string">0' 00'</text>
-			<started-at type="int">0</started-at>
-			<elapsed-time type="int">0</elapsed-time>
-		</chrono>
-
-		<chrono n="1">
-			<started type="bool">0</started>
-			<paused type="bool">0</paused>
-			<text type="string">0' 00'</text>
-			<started-at type="int">0</started-at>
-			<elapsed-time type="int">0</elapsed-time>
-		</chrono>
-		
 	</instrumentation>
 	
 	<modes>
@@ -951,20 +1048,7 @@
 								</and>
 							</condition>
 							<command>nasal</command>
-							<script>
-							if (getprop("/sim/current-view/can-change-z-offset")) {
-								var distance = getprop("/sim/current-view/z-offset-m");
-								var multiple = getprop("/sim/current-view/z-offset-inc-step");
-								var min_dist = getprop("/sim/current-view/z-offset-min-m");
-
-								distance = math.round(std.min(-min_dist, distance + multiple) / multiple) * multiple;
-								setprop("/sim/current-view/z-offset-m", distance);
-
-								gui.popupTip(sprintf("%d meters", abs(distance)));
-							} else {
-								view.decrease();
-							}
-							</script>
+							<script>libraries.fovZoom(-1);</script>
 						</binding>
 					</button>
 					<button n="4">
@@ -979,20 +1063,7 @@
 								</and>
 							</condition>
 							<command>nasal</command>
-							<script>
-								if (getprop("/sim/current-view/can-change-z-offset")) {
-									var distance = getprop("/sim/current-view/z-offset-m");
-									var multiple = getprop("/sim/current-view/z-offset-dec-step");
-									var max_dist = getprop("/sim/current-view/z-offset-max-m");
-
-									distance = math.round(std.max(-max_dist, distance + multiple) / multiple) * multiple;
-									setprop("/sim/current-view/z-offset-m", distance);
-
-									gui.popupTip(sprintf("%d meters", abs(distance)));
-								} else {
-									view.increase();
-								}
-							</script>
+							<script>libraries.fovZoom(1);</script>
 						</binding>
 					</button>
 				</mode>
@@ -1004,10 +1075,16 @@
 				<desc>Autothrottle Disconnect</desc>
 				<binding>
 					<command>nasal</command>
+					<script>libraries.APPanel.ATDisc();</script>
+				</binding>
+			</key>
+			<key n="6">
+				<name>CTRL-f</name>
+				<desc>MCT/FLX power</desc>
+				<binding>
+					<command>nasal</command>
 					<script>
-						if (getprop("/it-autoflight/output/athr") == 1) {
-							setprop("/it-autoflight/input/athr", 0);
-						}
+					systems.doMCTThrust();
 					</script>
 				</binding>
 			</key>
@@ -1016,15 +1093,7 @@
 				<desc>Reset zoom to default</desc>
 				<binding>
 					<command>nasal</command>
-					<script>
-						if (getprop("/sim/current-view/can-change-z-offset")) {
-							setprop("/sim/current-view/z-offset-m", getprop("/sim/current-view/z-offset-default") * -1);
-
-							gui.popupTip(sprintf("%d meters", getprop("/sim/current-view/z-offset-default")));
-						} else {
-							setprop("/sim/current-view/field-of-view", getprop("/sim/view/config/default-field-of-view-deg"));
-						}
-					</script>
+					<script>libraries.fovZoom(0);</script>
 				</binding>
 			</key>
 			<key n="33">
@@ -1245,13 +1314,16 @@
 				<desc>Autopilot Disconnect</desc>
 				<binding>
 					<command>nasal</command>
+					<script>libraries.APPanel.APDisc();</script>
+				</binding>
+			</key>
+			<key n="70">
+				<name>SHIFT-f</name>
+				<desc>CL power</desc>
+				<binding>
+					<command>nasal</command>
 					<script>
-						if (getprop("/it-autoflight/output/ap1") == 1) {
-							setprop("/it-autoflight/input/ap1", 0);
-						}
-						if (getprop("/it-autoflight/output/ap2") == 1) {
-							setprop("/it-autoflight/input/ap2", 0);
-						}
+					systems.doCLThrust();
 					</script>
 				</binding>
 			</key>
@@ -1260,21 +1332,8 @@
 				<desc>Increase field of view</desc>
 				<repeatable type="bool">true</repeatable>
 				<binding>
-				<command>nasal</command>
-				<script>
-					if (getprop("/sim/current-view/can-change-z-offset")) {
-						var distance = getprop("/sim/current-view/z-offset-m");
-						var multiple = getprop("/sim/current-view/z-offset-dec-step");
-						var max_dist = getprop("/sim/current-view/z-offset-max-m");
-
-						distance = math.round(std.max(-max_dist, distance + multiple) / multiple) * multiple;
-						setprop("/sim/current-view/z-offset-m", distance);
-
-						gui.popupTip(sprintf("%d meters", abs(distance)));
-					} else {
-						view.increase();
-					}
-				</script>
+					<command>nasal</command>
+					<script>libraries.fovZoom(1);</script>
 				</binding>
 			</key>
 			<key n="120">
@@ -1283,20 +1342,7 @@
 				<repeatable type="bool">true</repeatable>
 				<binding>
 					<command>nasal</command>
-					<script>
-						if (getprop("/sim/current-view/can-change-z-offset")) {
-							var distance = getprop("/sim/current-view/z-offset-m");
-							var multiple = getprop("/sim/current-view/z-offset-inc-step");
-							var min_dist = getprop("/sim/current-view/z-offset-min-m");
-
-							distance = math.round(std.min(-min_dist, distance + multiple) / multiple) * multiple;
-							setprop("/sim/current-view/z-offset-m", distance);
-
-							gui.popupTip(sprintf("%d meters", abs(distance)));
-						} else {
-							view.decrease();
-						}
-					</script>
+					<script>libraries.fovZoom(-1);</script>
 				</binding>
 			</key>
 			<key n="127">
@@ -1353,31 +1399,36 @@
 				<name>Ctrl-b</name>
 				<desc>Cycle speedbrake setting</desc>
 				<binding>
-					<command>property-assign</command>
-					<property>controls/flight/speedbrake-arm</property>
-					<value>0</value>
-				</binding>
-				<binding>
 					<condition>
-						<or>
-							<equals>
-								<property>/gear/gear[1]/wow</property>
+						<and>
+							<not-equals>
+								<property>/controls/flight/speedbrake-arm</property>
 								<value>1</value>
-							</equals>
-							<equals>
-								<property>/gear/gear[2]/wow</property>
-								<value>1</value>
-							</equals>
-						</or>
+							</not-equals>
+							<or>
+								<equals>
+									<property>/gear/gear[1]/wow</property>
+									<value>1</value>
+								</equals>
+								<equals>
+									<property>/gear/gear[2]/wow</property>
+									<value>1</value>
+								</equals>
+							</or>
+						</and>
 					</condition>
 					<command>property-cycle</command>
-					<property>controls/flight/speedbrake-lever</property>
-					<value>0</value>
-					<value>1</value>
+					<property>/controls/flight/speedbrake</property>
+					<value>0.0</value>
+					<value>1.0</value>
 				</binding>
 				<binding>
 					<condition>
 						<and>
+							<not-equals>
+								<property>/controls/flight/speedbrake-arm</property>
+								<value>1</value>
+							</not-equals>
 							<equals>
 								<property>/gear/gear[1]/wow</property>
 								<value>0</value>
@@ -1389,9 +1440,24 @@
 						</and>
 					</condition>
 					<command>property-cycle</command>
-					<property>controls/flight/speedbrake-lever</property>
-					<value>0</value>
+					<property>/controls/flight/speedbrake</property>
+					<value>0.0</value>
 					<value>0.5</value>
+					<value>1.0</value>
+				</binding>
+				<binding>
+					<command>property-assign</command>
+					<property>/controls/flight/speedbrake-arm</property>
+					<value>0</value>
+				</binding>
+			</key>
+			<key n="108">
+				<name>l</name>
+				<desc>Flashlight</desc>
+				<binding>
+					<command>property-cycle</command>
+					<property>sim/rendering/als-secondary-lights/use-flashlight</property>
+					<value>0</value>
 					<value>1</value>
 				</binding>
 			</key>
@@ -1414,6 +1480,8 @@
 			<file>Aircraft/IDG-A32X/Nasal/efis.nas</file>
 			<file>Aircraft/IDG-A32X/Nasal/ECAM.nas</file>
 			<file>Aircraft/IDG-A32X/Nasal/shake.nas</file>
+			<file>Aircraft/IDG-A32X/Nasal/light-manager.nas</file>
+			<file>Aircraft/IDG-A32X/Nasal/zoom-views.nas</file>
 		</libraries>
 		<acconfig>
 			<file>Aircraft/IDG-A32X/AircraftConfig/acconfig.nas</file>
@@ -1441,32 +1509,18 @@
 			<file>Aircraft/IDG-A32X/Nasal/FMGC-b.nas</file>
 			<file>Aircraft/IDG-A32X/Nasal/FMGC-c.nas</file>
 		</fmgc>
-		<mcdu1>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU1/MCDU.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU1/F-PLNA.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU1/INITA.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU1/INITB.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU1/PERFCLB.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU1/PERFCRZ.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU1/PERFDES.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU1/PERFTO.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU1/RADNAV.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU1/DATA.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU1/STATUS.nas</file>
-		</mcdu1>
-		<mcdu2>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU2/MCDU.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU2/F-PLNA.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU2/INITA.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU2/INITB.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU2/PERFCLB.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU2/PERFCRZ.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU2/PERFDES.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU2/PERFTO.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU2/RADNAV.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU2/DATA.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU2/STATUS.nas</file>
-		</mcdu2>
+		<mcdu>
+			<file>Aircraft/IDG-A32X/Nasal/MCDU/MCDU.nas</file>
+			<file>Aircraft/IDG-A32X/Nasal/MCDU/INITA.nas</file>
+			<file>Aircraft/IDG-A32X/Nasal/MCDU/INITB.nas</file>
+			<file>Aircraft/IDG-A32X/Nasal/MCDU/PERFCLB.nas</file>
+			<file>Aircraft/IDG-A32X/Nasal/MCDU/PERFCRZ.nas</file>
+			<file>Aircraft/IDG-A32X/Nasal/MCDU/PERFDES.nas</file>
+			<file>Aircraft/IDG-A32X/Nasal/MCDU/PERFTO.nas</file>
+			<file>Aircraft/IDG-A32X/Nasal/MCDU/RADNAV.nas</file>
+			<file>Aircraft/IDG-A32X/Nasal/MCDU/DATA.nas</file>
+			<file>Aircraft/IDG-A32X/Nasal/MCDU/STATUS.nas</file>
+		</mcdu>
 		<canvas_pfd>
 			<file>Aircraft/IDG-A32X/Models/Instruments/PFD/PFD.nas</file>
 		</canvas_pfd>
@@ -1483,9 +1537,32 @@
 		<canvas_mcdu>
 			<file>Aircraft/IDG-A32X/Models/Instruments/MCDU/MCDU.nas</file>
 		</canvas_mcdu>
+		<ecam>
+			<file>Aircraft/IDG-A32X/Nasal/ECAM/ECAM-controller.nas</file>
+			<file>Aircraft/IDG-A32X/Nasal/ECAM/ECAM-logic.nas</file>
+			<file>Aircraft/IDG-A32X/Nasal/ECAM/ECAM-messages.nas</file>
+		</ecam>
 		<icing>
 			<file>Aircraft/IDG-A32X/Nasal/icing.nas</file>
 		</icing>
+		<autopush>
+			<file>Aircraft/IDG-A32X/Nasal/autopush.nas</file>
+		</autopush>
+		<autopush_driver>
+			<file>Aircraft/IDG-A32X/Nasal/autopush_driver.nas</file>
+		</autopush_driver>
+		<dynarr>
+			<file>Aircraft/IDG-A32X/Nasal/dynarr.nas</file>
+		</dynarr>
+		<autopush_route>
+			<file>Aircraft/IDG-A32X/Nasal/autopush_route.nas</file>
+		</autopush_route>
+		<rmp>
+			<file>Aircraft/IDG-A32X/Nasal/rmp.nas</file>
+		</rmp>
+		<acp>
+			<file>Aircraft/IDG-A32X/Nasal/acp.nas</file>
+		</acp>
 	</nasal>
 
 </PropertyList>

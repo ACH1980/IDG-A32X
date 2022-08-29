@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
-##############################################
-# Copyright (c) Joshua Davidson (it0uchpods) #
-##############################################
--->
+<!-- Copyright (c) 2019 Joshua Davidson (Octal450) -->
 
 <!-- A3XX CFM56/CFM Leap/PW PurePower FADEC -->
-<!-- Joshua Davidson (it0uchpods) -->
 
 <PropertyList>
 
@@ -387,10 +382,16 @@
 							<value>MAN</value>
 						</equals>
 					</or>
-					<equals>
-						<property>/it-autoflight/output/thr-mode</property>
-						<value>0</value>
-					</equals>
+					<or>
+						<equals>
+							<property>/it-autoflight/output/thr-mode</property>
+							<value>0</value>
+						</equals>
+						<equals>
+							<property>/it-autoflight/mode/thr</property>
+							<value>RETARD</value>
+						</equals>
+					</or>
 				</and>
 			</condition>
 			<value>0.3</value>
@@ -599,10 +600,16 @@
 							<value>MAN</value>
 						</equals>
 					</or>
-					<equals>
-						<property>/it-autoflight/output/thr-mode</property>
-						<value>0</value>
-					</equals>
+					<or>
+						<equals>
+							<property>/it-autoflight/output/thr-mode</property>
+							<value>0</value>
+						</equals>
+						<equals>
+							<property>/it-autoflight/mode/thr</property>
+							<value>RETARD</value>
+						</equals>
+					</or>
 				</and>
 			</condition>
 			<value>0.3</value>
@@ -1141,6 +1148,15 @@
 		</input>
 		<input>
 			<condition>
+				<equals>
+					<property>/systems/thrust/thr-locked</property>
+					<value>1</value>
+				</equals>
+			</condition>
+			<property>/systems/thrust/thr-lock-cmd[0]</property>
+		</input>
+		<input>
+			<condition>
 				<and>
 					<equals>
 						<property>/controls/engines/thrust-limit</property>
@@ -1186,6 +1202,15 @@
 				</equals>
 			</condition>
 			<property>/controls/engines/engine[1]/throttle-rev</property>
+		</input>
+		<input>
+			<condition>
+				<equals>
+					<property>/systems/thrust/thr-locked</property>
+					<value>1</value>
+				</equals>
+			</condition>
+			<property>/systems/thrust/thr-lock-cmd[1]</property>
 		</input>
 		<input>
 			<condition>

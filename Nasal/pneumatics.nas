@@ -1,80 +1,76 @@
 # A3XX Pneumatic System
-# Joshua Davidson (it0uchpods) and Jonathan Redpath (legoboyvdlp)
+# Joshua Davidson (Octal450) and Jonathan Redpath (legoboyvdlp)
 
-##############################################
-# Copyright (c) Joshua Davidson (it0uchpods) #
-##############################################
+# Copyright (c) 2019 Joshua Davidson (Octal450)
 
-setlistener("/sim/signals/fdm-initialized", func {
-	var altitude = getprop("/instrumentation/altimeter/indicated-altitude-ft");
-	var bleed1_sw = getprop("/controls/pneumatic/switches/bleed1");
-	var bleed2_sw = getprop("/controls/pneumatic/switches/bleed2");
-	var bleedapu_sw = getprop("/controls/pneumatic/switches/bleedapu");
-	var pack1_sw = getprop("/controls/pneumatic/switches/pack1");
-	var pack2_sw = getprop("/controls/pneumatic/switches/pack2");
-	var hot_air_sw = getprop("/controls/pneumatic/switches/hot-air");
-	var ram_air_sw	= getprop("/controls/pneumatic/switches/ram-air");
-	var pack_flo_sw = getprop("/controls/pneumatic/switches/pack-flo");
-	var xbleed_sw = getprop("/controls/pneumatic/switches/xbleed");
-	var eng1_starter = getprop("/systems/pneumatic/eng1-starter");
-	var eng2_starter = getprop("/systems/pneumatic/eng2-starter");
-	var groundair = getprop("/systems/pneumatic/groundair");
-	var groundair_supp = getprop("/controls/pneumatic/switches/groundair");
-	var rpmapu = getprop("/systems/apu/rpm");
-	var stateL = getprop("/engines/engine[0]/state");
-	var stateR = getprop("/engines/engine[1]/state");
-	var bleedapu_fail = getprop("/systems/failures/bleed-apu");
-	var bleedext_fail = getprop("/systems/failures/bleed-ext");
-	var bleedeng1_fail = getprop("/systems/failures/bleed-eng1");
-	var bleedeng2_fail = getprop("/systems/failures/bleed-eng2");
-	var pack1_fail = getprop("/systems/failures/pack1");
-	var pack2_fail = getprop("/systems/failures/pack2");
-	var engantiice1 = getprop("/controls/deice/eng1-on");
-	var engantiice2 = getprop("/controls/deice/eng2-on");
-	var bleed1 = getprop("/systems/pneumatic/bleed1");
-	var bleed2 = getprop("/systems/pneumatic/bleed2");
-	var bleedapu = getprop("/systems/pneumatic/bleedapu");
-	var ground = getprop("/systems/pneumatic/groundair");
-	var pack1 = getprop("/systems/pneumatic/pack1");
-	var pack2 = getprop("/systems/pneumatic/pack2");
-	var pack_psi = getprop("/systems/pneumatic/pack-psi");
-	var start_psi = getprop("/systems/pneumatic/start-psi");
-	var total_psi = getprop("/systems/pneumatic/total-psi");
-	var xbleed = getprop("/systems/pneumatic/xbleed", 0);
-	var starting = getprop("/systems/pneumatic/starting");
-	var phase = getprop("/FMGC/status/phase");
-	var pressmode = getprop("/systems/pressurization/mode");
-	var state1 = getprop("/systems/thrust/state1");
-	var state2 = getprop("/systems/thrust/state2");
-	var wowc = getprop("/gear/gear[0]/wow");
-	var wowl = getprop("/gear/gear[1]/wow");
-	var wowr = getprop("/gear/gear[2]/wow");
-	var deltap = getprop("/systems/pressurization/deltap");
-	var outflow = getprop("/systems/pressurization/outflowpos"); 
-	var speed = getprop("/velocities/groundspeed-kt");
-	var altitude = getprop("/instrumentation/altimeter/indicated-altitude-ft");
-	var airport_arr_elev_ft = getprop("autopilot/route-manager/destination/field-elevation-ft");
-	var vs = getprop("/systems/pressurization/vs-norm");
-	var manvs = getprop("/systems/pressurization/manvs-cmd");
-	var ditch = getprop("/systems/pressurization/ditchingpb");
-	var outflowpos = getprop("/systems/pressurization/outflowpos");
-	var cabinalt = getprop("/systems/pressurization/cabinalt");
-	var targetalt = getprop("/systems/pressurization/targetalt");
-	var targetvs = getprop("/systems/pressurization/targetvs");
-	var ambient = getprop("/systems/pressurization/ambientpsi");
-	var cabinpsi = getprop("/systems/pressurization/cabinpsi");
-	var pause = getprop("/sim/freeze/master");
-	var auto = getprop("/systems/pressurization/auto");
-	var dcess = getprop("/systems/electrical/bus/dc-ess");
-	var acess = getprop("/systems/electrical/bus/ac-ess");
-	var fanon = getprop("/systems/ventilation/avionics/fan");
-	var eng1on = getprop("/controls/deice/eng1-on");
-	var eng2on = getprop("/controls/deice/eng2-on");
-	var total_psi_calc = 0;
-	var masks = getprop("/controls/oxygen/masksDeployMan");
-	var autoMasks = getprop("/controls/oxygen/masksDeploy");
-	var guard = getprop("/controls/oxygen/masksGuard");
-});
+var altitude = 0;
+var bleed1_sw = 0;
+var bleed2_sw = 0;
+var bleedapu_sw = 0;
+var pack1_sw = 0;
+var pack2_sw = 0;
+var hot_air_sw = 0;
+var ram_air_sw	= 0;
+var pack_flo_sw = 0;
+var xbleed_sw = 0;
+var eng1_starter = 0;
+var eng2_starter = 0;
+var groundair = 0;
+var groundair_supp = 0;
+var rpmapu = 0;
+var stateL = 0;
+var stateR = 0;
+var bleedapu_fail = 0;
+var bleedext_fail = 0;
+var bleedeng1_fail = 0;
+var bleedeng2_fail = 0;
+var pack1_fail = 0;
+var pack2_fail = 0;
+var engantiice1 = 0;
+var engantiice2 = 0;
+var bleed1 = 0;
+var bleed2 = 0;
+var bleedapu = 0;
+var ground = 0;
+var pack1 = 0;
+var pack2 = 0;
+var pack_psi = 0;
+var start_psi = 0;
+var total_psi = 0;
+var xbleed = 0;
+var starting = 0;
+var phase = 0;
+var pressmode = 0;
+var state1 = 0;
+var state2 = 0;
+var wowc = 0;
+var wowl = 0;
+var wowr = 0;
+var deltap = 0;
+var outflow = 0;
+var speed = 0;
+var altitude = 0;
+var airport_arr_elev_ft = 0;
+var vs = 0;
+var manvs = 0;
+var ditch = 0;
+var outflowpos = 0;
+var cabinalt = 0;
+var targetalt = 0;
+var targetvs = 0;
+var ambient = 0;
+var cabinpsi = 0;
+var pause = 0;
+var auto = 0;
+var dcess = 0;
+var acess = 0;
+var fanon = 0;
+var eng1on = 0;
+var eng2on = 0;
+var total_psi_calc = 0;
+var masks = 0;
+var autoMasks = 0;
+var guard = 0;
 
 var PNEU = {
 	init: func() {
@@ -107,6 +103,7 @@ var PNEU = {
 		setprop("/systems/pneumatic/pack1-fault", 0);
 		setprop("/systems/pneumatic/pack2-fault", 0);
 		setprop("/systems/pneumatic/xbleed", 0);
+		setprop("/systems/pneumatic/xbleed-state", "closed");
 		setprop("/systems/pneumatic/starting", 0);
 		setprop("/FMGC/internal/dep-arpt", "");
 		altitude = getprop("/instrumentation/altimeter/indicated-altitude-ft");
@@ -130,6 +127,16 @@ var PNEU = {
 		setprop("/systems/pressurization/ambientpsi", "0");
 		setprop("/systems/pressurization/cabinpsi", "0");
 		setprop("/systems/pressurization/manvs-cmd", "0");
+		setprop("/systems/pressurization/pack-1-out-temp", 0);
+		setprop("/systems/pressurization/pack-2-out-temp", 0);
+		setprop("/systems/pressurization/pack-1-bypass", 0);
+		setprop("/systems/pressurization/pack-2-bypass", 0);
+		setprop("/systems/pressurization/pack-1-flow", 0);
+		setprop("/systems/pressurization/pack-2-flow", 0);
+		setprop("/systems/pressurization/pack-1-comp-out-temp", 0);
+		setprop("/systems/pressurization/pack-2-comp-out-temp", 0);
+		setprop("/systems/pressurization/pack-1-valve", 0);
+		setprop("/systems/pressurization/pack-2-valve", 0);
 		setprop("/systems/ventilation/cabin/fans", 0); # aircon fans
 		setprop("/systems/ventilation/avionics/fan", 0);
 		setprop("/systems/ventilation/avionics/extractvalve", "0");
@@ -142,6 +149,20 @@ var PNEU = {
 		setprop("/controls/oxygen/masksDeployMan", 0);
 		setprop("/controls/oxygen/masksReset", 0); # this is the TMR RESET pb on the maintenance panel, needs 3D model
 		setprop("/controls/oxygen/masksSys", 0);
+		setprop("/systems/pneumatic/hp-valve-1-state", 0);
+		setprop("/systems/pneumatic/hp-valve-2-state", 0);
+		setprop("/systems/pneumatic/hp-valve-1", 0);
+		setprop("/systems/pneumatic/hp-valve-2", 0);
+		setprop("/systems/pneumatic/eng-valve-1-state", 0);
+		setprop("/systems/pneumatic/eng-valve-2-state", 0);
+		setprop("/systems/pneumatic/eng-valve-1", 0);
+		setprop("/systems/pneumatic/eng-valve-2", 0);
+		setprop("/systems/pneumatic/precooler-1-psi", 0);
+		setprop("/systems/pneumatic/precooler-2-psi", 0);
+		setprop("/systems/pneumatic/precooler-1-temp", 0);
+		setprop("/systems/pneumatic/precooler-2-temp", 0);
+		setprop("/systems/pneumatic/precooler-1-ovht", 0);
+		setprop("/systems/pneumatic/precooler-2-ovht", 0);
 	},
 	loop: func() {
 		bleed1_sw = getprop("/controls/pneumatic/switches/bleed1");
@@ -175,8 +196,17 @@ var PNEU = {
 		# Air Sources/PSI
 		if (rpmapu >= 94.9 and bleedapu_sw and !bleedapu_fail) {
 			setprop("/systems/pneumatic/bleedapu", 34);
+			if (getprop("/controls/APU/master") == 1) {
+				setprop("/systems/apu/bleed-used", 1);
+			}
 		} else {
 			setprop("/systems/pneumatic/bleedapu", 0);
+		}
+		
+		if (groundair_supp and !bleedext_fail) {
+			setprop("/systems/pneumatic/groundair", 39);
+		} else {
+			setprop("/systems/pneumatic/groundair", 0);
 		}
 		
 		ground = getprop("/systems/pneumatic/groundair");
@@ -271,12 +301,6 @@ var PNEU = {
 			setprop("/systems/pneumatic/total-psi", total_psi_calc);
 		}
 		
-		if (groundair_supp) {
-			setprop("/systems/pneumatic/groundair", 39);
-		} else {
-			setprop("/systems/pneumatic/groundair", 0);
-		}
-		
 		if (engantiice1 and bleed1 > 20) { # shut down anti-ice if bleed is lost else turn it on
 			setprop("/controls/deice/lengine", 0); 
 			setprop("/controls/deice/eng1-on", 0);
@@ -296,7 +320,6 @@ var PNEU = {
 		}
 		
 		total_psi = getprop("/systems/pneumatic/total-psi");
-		
 		phase = getprop("/FMGC/status/phase");
 		pressmode = getprop("/systems/pressurization/mode");
 		state1 = getprop("/systems/thrust/state1");
@@ -347,10 +370,10 @@ var PNEU = {
 		acess = getprop("/systems/electrical/bus/ac-ess");
 		fanon = getprop("/systems/ventilation/avionics/fan");
 		
-		if ((dcess > 25) or (acess > 110)) {
+		if (dcess > 25 or acess > 110) {
 			setprop("/systems/ventilation/avionics/fan", 1);
 			setprop("/systems/ventilation/lavatory/extractfan", 1);
-		} else if ((dcess == 0) and (acess == 0)) {
+		} else if (dcess == 0 and acess == 0) {
 			setprop("/systems/ventilation/avionics/fan", 0);
 			setprop("/systems/ventilation/lavatory/extractfan", 0);
 		}

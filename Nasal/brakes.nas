@@ -1,20 +1,15 @@
 # A3XX Autobrake
-# Joshua Davidson (it0uchpods)
+# Joshua Davidson (Octal450)
 
-##############################################
-# Copyright (c) Joshua Davidson (it0uchpods) #
-##############################################
+# Copyright (c) 2019 Joshua Davidson (Octal450)
 
+var thr1 = 0;
+var thr2 = 0;
+var wow0 = 0;
+var gnd_speed = 0;
 setprop("/controls/autobrake/active", 0);
 setprop("/controls/autobrake/mode", 0);
 setprop("/controls/autobrake/decel-rate", 0);
-
-setlistener("/sim/signals/fdm-initialized", func {
-	var thr1 = 0;
-	var thr2 = 0;
-	var wow0 = getprop("/gear/gear[0]/wow");
-	var gnd_speed = getprop("/velocities/groundspeed-kt");
-});
 
 var autobrake_init = func {
 	setprop("/controls/autobrake/active", 0);
@@ -36,6 +31,7 @@ controls.applyBrakes = func(v, which = 0) {
 # Set autobrake mode
 var arm_autobrake = func(mode) {
 	wow0 = getprop("/gear/gear[0]/wow");
+	gnd_speed = getprop("/velocities/groundspeed-kt");
 	if (mode == 0) { # OFF
 		absChk.stop();
 		if (getprop("/controls/autobrake/active") == 1) {
@@ -53,7 +49,7 @@ var arm_autobrake = func(mode) {
 		setprop("/controls/autobrake/decel-rate", 3);
 		setprop("/controls/autobrake/mode", 2);
 		absChk.start();
-	} else if (mode == 3 and wow0 == 1) { # MAX
+	} else if (mode == 3 and wow0 == 1 and gnd_speed < 40) { # MAX
 		setprop("/controls/autobrake/decel-rate", 6);
 		setprop("/controls/autobrake/mode", 3);
 		absChk.start();

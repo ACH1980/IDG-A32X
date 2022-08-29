@@ -1,9 +1,7 @@
 # A3XX IAE V2500 Engine
-# Joshua Davidson (it0uchpods)
+# Joshua Davidson (Octal450)
 
-##############################################
-# Copyright (c) Joshua Davidson (it0uchpods) #
-##############################################
+# Copyright (c) 2019 Joshua Davidson (Octal450)
 
 #####################
 # Initializing Vars #
@@ -31,6 +29,7 @@ setprop("/controls/engines/engine[1]/last-igniter", "B");
 var eng_init = func {
 	setprop("/controls/engines/engine[0]/man-start", 0);
 	setprop("/controls/engines/engine[1]/man-start", 0);
+	eng_common_init();
 }
 
 # Trigger Startups and Stops

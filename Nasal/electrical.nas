@@ -1,15 +1,14 @@
 # A3XX Electrical System
-# Joshua Davidson (it0uchpods) and Jonathan Redpath (legoboyvdlp)
+# Joshua Davidson (Octal450) and Jonathan Redpath (legoboyvdlp)
 
-##############################################
-# Copyright (c) Joshua Davidson (it0uchpods) #
-##############################################
+# Copyright (c) 2019 Joshua Davidson (Octal450)
 
 var ac_volt_std = 115;
 var ac_volt_min = 110;
 var dc_volt_std = 28;
 var dc_volt_min = 25;
 var dc_amps_std = 150;
+var batt_amps = 2;
 var tr_amps_std = 55;
 var ac_hz_std = 400;
 var ac1_src = "XX";
@@ -20,61 +19,58 @@ var screens = nil;
 var lpower_consumption = nil;
 var light_power_consumption = nil;
 var lights = nil;
-
-setlistener("/sim/signals/fdm-initialized", func {
-	var galley_sw = getprop("/controls/electrical/switches/galley");
-	var idg1_sw = getprop("/controls/electrical/switches/idg1");
-	var idg2_sw = getprop("/controls/electrical/switches/idg2");
-	var gen1_sw = getprop("/controls/electrical/switches/gen1");
-	var gen2_sw = getprop("/controls/electrical/switches/gen2");
-	var gen_apu_sw = getprop("/controls/electrical/switches/gen-apu");
-	var gen_ext_sw = getprop("/controls/electrical/switches/gen-ext");
-	var apu_ext_crosstie_sw = getprop("/controls/electrical/switches/apu-ext-crosstie");
-	var ac_ess_feed_sw = getprop("/controls/electrical/switches/ac-ess-feed");
-	var battery1_sw = getprop("/controls/electrical/switches/battery1");
-	var battery2_sw = getprop("/controls/electrical/switches/battery2");
-	var battery1_volts = getprop("/systems/electrical/battery1-volts");
-	var battery2_volts = getprop("/systems/electrical/battery2-volts");
-	var battery1_amps = getprop("/systems/electrical/battery1-amps");
-	var battery2_amps = getprop("/systems/electrical/battery2-amps");
-	var battery1_percent = getprop("/systems/electrical/battery1-percent");
-	var battery2_percent = getprop("/systems/electrical/battery2-percent");
-	var battery1_percent_calc = 0;
-	var battery2_percent_calc = 0;
-	var rpmapu = getprop("/systems/apu/rpm");
-	var extpwr_on = getprop("/controls/switches/cart");
-	var stateL = getprop("/engines/engine[0]/state");
-	var stateR = getprop("/engines/engine[1]/state");
-	var xtieL = getprop("/controls/electrical/xtie/xtieL");
-	var xtieR = getprop("/controls/electrical/xtie/xtieR");
-	var ac1 = getprop("/systems/electrical/bus/ac1");
-	var ac2 = getprop("/systems/electrical/bus/ac2");
-	var ac_ess = getprop("/systems/electrical/bus/ac-ess");
-	var dc_ess_shed = getprop("/systems/electrical/bus/dc-ess-shed");
-	var ac_ess_shed = getprop("/systems/electrical/bus/ac-ess-shed");
-	var dc1 = getprop("/systems/electrical/bus/dc1");
-	var dc2 = getprop("/systems/electrical/bus/dc2");
-	var dcbat = getprop("/systems/electrical/bus/dcbat");
-	var dc_ess = getprop("/systems/electrical/bus/dc-ess");
-	var gen_1_volts = getprop("/systems/electrical/extra/gen1-volts");
-	var gen_2_volts = getprop("/systems/electrical/extra/gen2-volts");
-	var galley_shed = getprop("/systems/electrical/extra/galleyshed");
-	var emergen = getprop("/controls/electrical/switches/emer-gen");
-	var ias = getprop("/instrumentation/airspeed-indicator/indicated-speed-kt");
-	var rat = getprop("/controls/hydraulic/rat");
-	var manrat = getprop("/controls/hydraulic/rat-man");
-	var ac_ess_fail = getprop("/systems/failures/elec-ac-ess");
-	var batt1_fail = getprop("/systems/failures/elec-batt1");
-	var batt2_fail = getprop("/systems/failures/elec-batt2");
-	var gallery_fail = getprop("/systems/failures/elec-galley");
-	var genapu_fail = getprop("/systems/failures/elec-genapu");
-	var gen1_fail = getprop("/systems/failures/elec-gen1");
-	var gen2_fail = getprop("/systems/failures/elec-gen2");
-	var bat1_volts = getprop("/systems/electrical/battery1-volts");
-	var bat2_volts = getprop("/systems/electrical/battery2-volts");
-	var replay = getprop("/sim/replay/replay-state");
-	var wow = getprop("/gear/gear[1]/wow");
-});
+var galley_sw = 0;
+var idg1_sw = 0;
+var idg2_sw = 0;
+var gen1_sw = 0;
+var gen2_sw = 0;
+var gen_apu_sw = 0;
+var gen_ext_sw = 0;
+var apu_ext_crosstie_sw = 0;
+var ac_ess_feed_sw = 0;
+var battery1_sw = 0;
+var battery2_sw = 0;
+var manrat = 0;
+var battery1_volts = 0;
+var battery2_volts = 0;
+var battery1_amps = 0;
+var battery2_amps = 0;
+var battery1_percent = 0;
+var battery2_percent = 0;
+var battery1_percent_calc = 0;
+var battery2_percent_calc = 0;
+var rpmapu = 0;
+var extpwr_on = 0;
+var stateL = 0;
+var stateR = 0;
+var xtieL = 0;
+var xtieR = 0;
+var ac1 = 0;
+var ac2 = 0;
+var ac_ess = 0;
+var dc_ess_shed = 0;
+var ac_ess_shed = 0;
+var dc1 = 0;
+var dc2 = 0;
+var dcbat = 0;
+var dc_ess = 0;
+var gen_1_volts = 0;
+var gen_2_volts = 0;
+var galley_shed = 0;
+var emergen = 0;
+var ias = 0;
+var rat = 0;
+var ac_ess_fail = 0;
+var batt1_fail = 0;
+var batt2_fail = 0;
+var gallery_fail = 0;
+var genapu_fail = 0;
+var gen1_fail = 0;
+var gen2_fail = 0;
+var bat1_volts = 0;
+var bat2_volts = 0;
+var replay = 0;
+var wow = 0;
 
 # Power Consumption, cockpit screens
 # According to pprune, each LCD uses 60W. Will assume that it reduces linearly to ~50 watts when dimmed, and to 0 watts when off
@@ -120,7 +116,7 @@ var light = {
 	power_consumption: func() {
 		
 		if (getprop(me.control_prop) != 0 and getprop(me.elec_prop) != 0) {
-			light_power_consumption = me.max_watts;
+			light_power_consumption = me.max_watts * getprop(me.control_prop);
 		} else {
 			light_power_consumption = 0;
 		} 
@@ -157,12 +153,15 @@ var ELEC = {
 		setprop("/controls/electrical/switches/ac-ess-feed", 0);
 		setprop("/controls/electrical/switches/battery1", 0);
 		setprop("/controls/electrical/switches/battery2", 0);
+		setprop("/controls/electrical/switches/rat-man", 0);
 		setprop("/systems/electrical/battery1-volts", 26.5);
 		setprop("/systems/electrical/battery2-volts", 26.5);
 		setprop("/systems/electrical/battery1-amps", 0);
 		setprop("/systems/electrical/battery2-amps", 0);
 		setprop("/systems/electrical/battery1-percent", 68);
 		setprop("/systems/electrical/battery2-percent", 68);
+		setprop("/systems/electrical/battery1-time", 0);
+		setprop("/systems/electrical/battery2-time", 0);
 		setprop("/systems/electrical/bus/dc1", 0);
 		setprop("/systems/electrical/bus/dc2", 0);
 		setprop("/systems/electrical/bus/dcbat", 0);
@@ -205,6 +204,7 @@ var ELEC = {
 		setprop("/systems/electrical/idg2-fault", 0);
 		setprop("/controls/electrical/xtie/xtieL", 0);
 		setprop("/controls/electrical/xtie/xtieR", 0);
+		setprop("/controls/electrical/rat", 0);
 		setprop("/systems/electrical/battery-available", 0);
 		setprop("/systems/electrical/dc2-available", 0);
 		# Below are standard FG Electrical stuff to keep things working when the plane is powered
@@ -265,7 +265,10 @@ var ELEC = {
 			light.new(name: "left-turnoff", max_watts:21, control_prop:"/controls/lighting/leftturnoff", elec_prop:"/systems/electrical/bus/ac1"),
 			light.new(name: "right-turnoff", max_watts:21, control_prop:"/controls/lighting/rightturnoff", elec_prop:"/systems/electrical/bus/ac2"),
 			light.new(name: "left-wing", max_watts:24, control_prop:"/controls/lighting/wing-lights", elec_prop:"/systems/electrical/bus/ac1"),
-			light.new(name: "right-wing", max_watts:24, control_prop:"/controls/lighting/wing-lights", elec_prop:"/systems/electrical/bus/ac2")];
+			light.new(name: "right-wing", max_watts:24, control_prop:"/controls/lighting/wing-lights", elec_prop:"/systems/electrical/bus/ac2"),
+			
+			light.new(name: "left-dome", max_watts:10, control_prop:"/controls/lighting/dome-norm", elec_prop:"/systems/electrical/bus/dc-ess"),
+			light.new(name: "right-dome", max_watts:10, control_prop:"/controls/lighting/dome-norm", elec_prop:"/systems/electrical/bus/dc-ess")];
 	},
 	loop: func() {
 		galley_sw = getprop("/controls/electrical/switches/galley");
@@ -279,6 +282,7 @@ var ELEC = {
 		ac_ess_feed_sw = getprop("/controls/electrical/switches/ac-ess-feed");
 		battery1_sw = getprop("/controls/electrical/switches/battery1");
 		battery2_sw = getprop("/controls/electrical/switches/battery2");
+		manrat = getprop("/controls/electrical/switches/rat-man");
 		battery1_volts = getprop("/systems/electrical/battery1-volts");
 		battery2_volts = getprop("/systems/electrical/battery2-volts");
 		battery1_percent = getprop("/systems/electrical/battery1-percent");
@@ -301,8 +305,7 @@ var ELEC = {
 		galley_shed = getprop("/systems/electrical/extra/galleyshed");
 		emergen = getprop("/controls/electrical/switches/emer-gen");
 		ias = getprop("/instrumentation/airspeed-indicator/indicated-speed-kt");
-		rat = getprop("/controls/hydraulic/rat");
-		manrat = getprop("/controls/hydraulic/rat-man");
+		rat = getprop("/controls/electrical/rat");
 		ac_ess_fail = getprop("/systems/failures/elec-ac-ess");
 		batt1_fail = getprop("/systems/failures/elec-batt1");
 		batt2_fail = getprop("/systems/failures/elec-batt2");
@@ -314,13 +317,13 @@ var ELEC = {
 		wow = getprop("/gear/gear[1]/wow");
 		
 		if (battery1_volts >= 20 and battery1_sw and !batt1_fail) {
-			setprop("/systems/electrical/battery1-amps", dc_amps_std);
+			setprop("/systems/electrical/battery1-amps", batt_amps);
 		} else {
 			setprop("/systems/electrical/battery1-amps", 0);
 		}
 		
 		if (battery2_volts >= 20 and battery2_sw and !batt2_fail) {
-			setprop("/systems/electrical/battery2-amps", dc_amps_std);
+			setprop("/systems/electrical/battery2-amps", batt_amps);
 		} else {
 			setprop("/systems/electrical/battery2-amps", 0);
 		}
@@ -328,7 +331,7 @@ var ELEC = {
 		battery1_amps = getprop("/systems/electrical/battery1-amps");
 		battery2_amps = getprop("/systems/electrical/battery2-amps");
 		
-		if (battery1_amps > 120 or battery2_amps > 120) {
+		if (battery1_amps > 0 or battery2_amps > 0) {
 			setprop("/systems/electrical/bus/dcbat", dc_volt_std);
 		} else {
 			setprop("/systems/electrical/bus/dcbat", 0);
@@ -593,13 +596,17 @@ var ELEC = {
 			setprop("/systems/electrical/extra/galleyshed", 0);
 		}
 		
-		if (((ac1 == 0 and ac2 == 0 and ias >= 100) or manrat) and replay == 0) {
+		if (ac1 < 110 and ac2 < 110 and ias >= 100 and replay == 0) {
 			setprop("/controls/hydraulic/rat-deployed", 1);
-			setprop("/controls/hydraulic/rat", 1);
+			setprop("/controls/electrical/rat", 1);
+			setprop("/controls/electrical/switches/emer-gen", 1);
+		} else if (manrat) {
+			setprop("/controls/hydraulic/rat-deployed", 1);
+			setprop("/controls/electrical/rat", 1);
 			setprop("/controls/electrical/switches/emer-gen", 1);
 		}
 		
-		if (ias < 100 or (ac1 == 1) or (ac2 == 1)) {
+		if (ias < 100 or ac1 >= 110 or ac2 >= 110) {
 			setprop("/controls/electrical/switches/emer-gen", 0);
 		}
 		
@@ -623,7 +630,7 @@ var ELEC = {
 			}
 		} else if (battery1_percent == 100 and (dc1 > 25 or dc2 > 25) and battery1_sw and !batt1_fail) {
 			setprop("/systems/electrical/battery1-time", getprop("/sim/time/elapsed-sec"));
-		} else if (battery1_amps >= 120 and battery1_sw and !batt1_fail) {
+		} else if (battery1_amps > 0 and battery1_sw and !batt1_fail) {
 			if (getprop("/systems/electrical/battery1-time") + 5 < getprop("/sim/time/elapsed-sec")) {
 				battery1_percent_calc = battery1_percent - 0.25; # Roughly 90 percent every 30 mins
 				if (battery1_percent_calc < 0) {
@@ -647,7 +654,7 @@ var ELEC = {
 			}
 		} else if (battery2_percent == 100 and (dc1 > 25 or dc2 > 25) and battery2_sw and !batt2_fail) {
 			setprop("/systems/electrical/battery2-time", getprop("/sim/time/elapsed-sec"));
-		} else if (battery2_amps >= 120 and battery2_sw and !batt2_fail) {
+		} else if (battery2_amps > 0 and battery2_sw and !batt2_fail) {
 			if (getprop("/systems/electrical/battery2-time") + 5 < getprop("/sim/time/elapsed-sec")) {
 				battery2_percent_calc = battery2_percent - 0.25; # Roughly 90 percent every 30 mins
 				if (battery2_percent_calc < 0) {
@@ -675,14 +682,26 @@ var ELEC = {
 			setprop("/systems/electrical/battery2-volts", math.clamp(battery2_percent * (24) / (10), 0, 24));
 		}
 		
-		if (getprop("/systems/electrical/bus/ac-ess") < 110) {
-			if (getprop("/it-autoflight/output/ap1") == 1) {
-				setprop("/it-autoflight/input/ap1", 0);
-			}
+		dc_ess = getprop("/systems/electrical/bus/dc-ess");
+		
+		if (dc2 < 25) {
 			if (getprop("/it-autoflight/output/ap2") == 1) {
-				setprop("/it-autoflight/input/ap2", 0);
+				libraries.apOff("hard", 2);
+			}
+		}
+		
+		if (dc_ess < 25 and dc2 < 25) {
+			if (getprop("/it-autoflight/output/athr") == 1) {
+				libraries.athrOff("hard");
+			}
+		}
+		
+		if (dc_ess < 25) {
+			if (getprop("/it-autoflight/output/ap1") == 1) {
+				libraries.apOff("hard", 1);
 			}
 			setprop("systems/electrical/on", 0);
+			setprop("/systems/thrust/thr-locked", 0);
 			setprop("/systems/electrical/outputs/adf", 0);
 			setprop("/systems/electrical/outputs/audio-panel", 0);
 			setprop("/systems/electrical/outputs/audio-panel[1]", 0);

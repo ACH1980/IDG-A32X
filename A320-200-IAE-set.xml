@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<!--
-##############################################
-# Copyright (c) Joshua Davidson (it0uchpods) #
-##############################################
--->
+<!-- Copyright (c) 2019 Joshua Davidson (Octal450) -->
 
 <PropertyList include="A320-main.xml">
 
@@ -17,6 +13,7 @@
 		<description>Airbus A320-232 (IAE V2527-A5)</description>
 		<flight-model>jsb</flight-model>
 		<aero>A320-200-IAE</aero>
+		<primary-set>true</primary-set>
 		<model>
 			<path>Aircraft/IDG-A32X/Models/A320-200-IAE.xml</path>
 			<livery>
@@ -42,7 +39,7 @@
 			</preview>
 		</previews>
 
-		<chase-distance-m type="double" archive="y">-100.0</chase-distance-m>
+		<chase-distance-m type="double" archive="y">-80.0</chase-distance-m>
 		<view>
 			<name>Pilot View</name>
 			<internal archive="y">true</internal>

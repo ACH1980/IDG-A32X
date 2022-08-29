@@ -1,9 +1,6 @@
 # A3XX ND Canvas
-# Joshua Davidson (it0uchpods) and Nikolai V. Chr.
 
-##############################################
-# Copyright (c) Joshua Davidson (it0uchpods) #
-##############################################
+# Copyright (c) 2019 Joshua Davidson (Octal450)
 
 io.include("A3XX_ND.nas");
 
@@ -15,12 +12,23 @@ var ND_2 = nil;
 var ND_1_test = nil;
 var ND_2_test = nil;
 var elapsedtime = 0;
-setprop("/instrumentation/du/du2-test", 0);
-setprop("/instrumentation/du/du2-test-time", 0);
-setprop("/instrumentation/du/du2-test-amount", 0);
-setprop("/instrumentation/du/du5-test", 0);
-setprop("/instrumentation/du/du5-test-time", 0);
-setprop("/instrumentation/du/du5-test-amount", 0);
+
+# Fetch nodes:
+var du1_test = props.globals.getNode("/instrumentation/du/du1-test");
+var du1_test_time = props.globals.getNode("/instrumentation/du/du1-test-time");
+var du1_test_amount = props.globals.getNode("/instrumentation/du/du1-test-amount");
+var du2_test = props.globals.getNode("/instrumentation/du/du2-test");
+var du2_test_time = props.globals.getNode("/instrumentation/du/du2-test-time");
+var du2_test_amount = props.globals.getNode("/instrumentation/du/du2-test-amount");
+var du5_test = props.globals.getNode("/instrumentation/du/du5-test");
+var du5_test_time = props.globals.getNode("/instrumentation/du/du5-test-time");
+var du5_test_amount = props.globals.getNode("/instrumentation/du/du5-test-amount");
+var du6_test = props.globals.getNode("/instrumentation/du/du6-test");
+var du6_test_time = props.globals.getNode("/instrumentation/du/du6-test-time");
+var du6_test_amount = props.globals.getNode("/instrumentation/du/du6-test-amount");
+var cpt_du_xfr = props.globals.getNode("/modes/cpt-du-xfr");
+var fo_du_xfr = props.globals.getNode("/modes/fo-du-xfr");
+var wow0 = props.globals.getNode("/gear/gear[0]/wow");
 
 var nd_display = {};
 
@@ -79,38 +87,50 @@ var canvas_nd_base = {
 	update: func() {
 		elapsedtime = getprop("/sim/time/elapsed-sec");
 		if (getprop("/systems/electrical/bus/ac-ess-shed") >= 110) {
-			if (getprop("/systems/acconfig/autoconfig-running") != 1 and getprop("/instrumentation/du/du2-test") != 1) {
-				setprop("/instrumentation/du/du2-test", 1);
-				setprop("/instrumentation/du/du2-test-amount", math.round((rand() * 5 ) + 35, 0.1));
-				setprop("/instrumentation/du/du2-test-time", getprop("/sim/time/elapsed-sec"));
-			} else if (getprop("/systems/acconfig/autoconfig-running") == 1 and getprop("/instrumentation/du/du2-test") != 1) {
-				setprop("/instrumentation/du/du2-test", 1);
-				setprop("/instrumentation/du/du2-test-amount", math.round((rand() * 5 ) + 35, 0.1));
-				setprop("/instrumentation/du/du2-test-time", getprop("/sim/time/elapsed-sec") - 30);
+			if (wow0.getValue() == 1) {
+				if (getprop("/systems/acconfig/autoconfig-running") != 1 and du2_test.getValue() != 1) {
+					du2_test.setValue(1);
+					du2_test_amount.setValue(math.round((rand() * 5 ) + 35, 0.1));
+					du2_test_time.setValue(getprop("/sim/time/elapsed-sec"));
+				} else if (getprop("/systems/acconfig/autoconfig-running") == 1 and du2_test.getValue() != 1) {
+					du2_test.setValue(1);
+					du2_test_amount.setValue(math.round((rand() * 5 ) + 35, 0.1));
+					du2_test_time.setValue(getprop("/sim/time/elapsed-sec") - 30);
+				}
+			} else {
+				du2_test.setValue(1);
+				du2_test_amount.setValue(0);
+				du2_test_time.setValue(-100);
 			}
 		} else {
-			setprop("/instrumentation/du/du2-test", 0);
+			du2_test.setValue(0);
 		}
 		if (getprop("/systems/electrical/bus/ac2") >= 110) {
-			if (getprop("/systems/acconfig/autoconfig-running") != 1 and getprop("/instrumentation/du/du5-test") != 1) {
-				setprop("/instrumentation/du/du5-test", 1);
-				setprop("/instrumentation/du/du5-test-amount", math.round((rand() * 5 ) + 35, 0.1));
-				setprop("/instrumentation/du/du5-test-time", getprop("/sim/time/elapsed-sec"));
-			} else if (getprop("/systems/acconfig/autoconfig-running") == 1 and getprop("/instrumentation/du/du5-test") != 1) {
-				setprop("/instrumentation/du/du5-test", 1);
-				setprop("/instrumentation/du/du5-test-amount", math.round((rand() * 5 ) + 35, 0.1));
-				setprop("/instrumentation/du/du5-test-time", getprop("/sim/time/elapsed-sec") - 30);
+			if (wow0.getValue() == 1) {
+				if (getprop("/systems/acconfig/autoconfig-running") != 1 and du5_test.getValue() != 1) {
+					du5_test.setValue(1);
+					du5_test_amount.setValue(math.round((rand() * 5 ) + 35, 0.1));
+					du5_test_time.setValue(getprop("/sim/time/elapsed-sec"));
+				} else if (getprop("/systems/acconfig/autoconfig-running") == 1 and du5_test.getValue() != 1) {
+					du5_test.setValue(1);
+					du5_test_amount.setValue(math.round((rand() * 5 ) + 35, 0.1));
+					du5_test_time.setValue(getprop("/sim/time/elapsed-sec") - 30);
+				}
+			} else {
+				du5_test.setValue(1);
+				du5_test_amount.setValue(0);
+				du5_test_time.setValue(-100);
 			}
 		} else {
-			setprop("/instrumentation/du/du5-test", 0);
+			du5_test.setValue(0);
 		}
 		
 		if (getprop("/systems/electrical/bus/ac-ess-shed") >= 110 and getprop("/controls/lighting/DU/du2") > 0) {
-			if (getprop("/instrumentation/du/du2-test-time") + getprop("/instrumentation/du/du2-test-amount") >= elapsedtime and getprop("/modes/cpt-du-xfr") != 1) {
+			if (du2_test_time.getValue() + du2_test_amount.getValue() >= elapsedtime and cpt_du_xfr.getValue() != 1) {
 				ND_1.page.hide();
 				ND_1_test.page.show();
 				ND_1_test.update();
-			} else if (getprop("/instrumentation/du/du1-test-time") + getprop("/instrumentation/du/du1-test-amount") >= elapsedtime and getprop("/modes/cpt-du-xfr") == 1) {
+			} else if (du1_test_time.getValue() + du1_test_amount.getValue() >= elapsedtime and cpt_du_xfr.getValue() == 1) {
 				ND_1.page.hide();
 				ND_1_test.page.show();
 				ND_1_test.update();
@@ -124,11 +144,11 @@ var canvas_nd_base = {
 			ND_1.page.hide();
 		}
 		if (getprop("/systems/electrical/bus/ac2") >= 110 and getprop("/controls/lighting/DU/du5") > 0) {
-			if (getprop("/instrumentation/du/du5-test-time") + getprop("/instrumentation/du/du6-test-amount") >= elapsedtime and getprop("/modes/fo-du-xfr") != 1) {
+			if (du5_test_time.getValue() + du5_test_amount.getValue() >= elapsedtime and fo_du_xfr.getValue() != 1) {
 				ND_2.page.hide();
 				ND_2_test.page.show();
 				ND_2_test.update();
-			} else if (getprop("/instrumentation/du/du6-test-time") + getprop("/instrumentation/du/du5-test-amount") >= elapsedtime and getprop("/modes/fo-du-xfr") == 1) {
+			} else if (du6_test_time.getValue() + du6_test_amount.getValue() >= elapsedtime and fo_du_xfr.getValue() == 1) {
 				ND_2.page.hide();
 				ND_2_test.page.show();
 				ND_2_test.update();
@@ -211,10 +231,12 @@ var canvas_ND_1_test = {
 		return ["Test_white","Test_text"];
 	},
 	update: func() {
-		if (getprop("/instrumentation/du/du2-test-time") + 1 >= elapsedtime and getprop("/modes/cpt-du-xfr") != 1) {
+		elapsedtime = getprop("/sim/time/elapsed-sec") or 0;
+		if ((du2_test_time.getValue() + 1 >= elapsedtime) and getprop("/modes/cpt-du-xfr") != 1) {
 			me["Test_white"].show();
 			me["Test_text"].hide();
-		} else if (getprop("/instrumentation/du/du1-test-time") + 1 >= elapsedtime and getprop("/modes/cpt-du-xfr") == 1) {
+		} else if ((du1_test_time.getValue() + 1 >= elapsedtime) and getprop("/modes/cpt-du-xfr") != 0) {
+			print(getprop("/modes/cpt-du-xfr"));
 			me["Test_white"].show();
 			me["Test_text"].hide();
 		} else {
@@ -251,10 +273,11 @@ var canvas_ND_2_test = {
 		return ["Test_white","Test_text"];
 	},
 	update: func() {
-		if (getprop("/instrumentation/du/du5-test-time") + 1 >= elapsedtime and getprop("/modes/cpt-du-xfr") != 1) {
+		elapsedtime = getprop("/sim/time/elapsed-sec") or 0;
+		if ((du5_test_time.getValue() + 1 >= elapsedtime) and getprop("/modes/cpt-du-xfr") != 1) {
 			me["Test_white"].show();
 			me["Test_text"].hide();
-		} else if (getprop("/instrumentation/du/du6-test-time") + 1 >= elapsedtime and getprop("/modes/cpt-du-xfr") == 1) {
+		} else if ((du6_test_time.getValue() + 1 >= elapsedtime) and getprop("/modes/cpt-du-xfr") != 0) {
 			me["Test_white"].show();
 			me["Test_text"].hide();
 		} else {
@@ -356,7 +379,7 @@ setlistener("/flight-management/control/capture-leg", func(n) {
 }, 0, 0);
 
 var showNd = func(nd = nil) {
-	if(nd == nil) nd = "main";
-	var dlg = canvas.Window.new([512, 512], "dialog");
+	if (nd == nil) nd = "main";
+	var dlg = canvas.Window.new([512, 512], "dialog").set("resize", 1);
 	dlg.setCanvas(nd_display[nd]);
 }
